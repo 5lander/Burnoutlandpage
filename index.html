@@ -167,24 +167,36 @@
     <div class="form reveal">
       <div class="steps"><i class="on"></i><i></i><i></i></div>
       <div class="pane on">
-        <div class="field"><label for="f1">Nombre completo</label><input id="f1" placeholder="Carlos Mendoza" autocomplete="name"></div>
+        <div class="field"><label for="f1">Nombre completo</label><input id="f1" placeholder="Carlos Mendoza" autocomplete="name" aria-describedby="e1"><p class="err" id="e1"></p></div>
         <div class="field"><label for="f2">Marca o empresa</label><input id="f2" placeholder="Indera Coffee Co." autocomplete="organization"></div>
         <div class="fnav"><span class="small">Paso 1 de 3</span><button class="btn btn-p" data-next>Continuar</button></div>
       </div>
       <div class="pane">
-        <div class="field"><label>¿Cuál es tu principal desafío hoy?</label>
-          <div class="chips">
-            <button class="chip" data-val="Producción Audiovisual">Producción audiovisual</button>
-            <button class="chip" data-val="Identidad de Marca">Identidad de marca</button>
-            <button class="chip" data-val="Embudo y Conversión">Embudo y conversión</button>
-            <button class="chip" data-val="Automatizaciones">Automatizaciones</button>
-          </div></div>
+        <div class="field"><label id="lbl-reto">¿Cuál es tu principal desafío hoy?</label>
+          <div class="chips" role="group" aria-labelledby="lbl-reto" aria-describedby="e-reto">
+            <button class="chip" data-val="Producción Audiovisual" aria-pressed="false">Producción audiovisual</button>
+            <button class="chip" data-val="Identidad de Marca" aria-pressed="false">Identidad de marca</button>
+            <button class="chip" data-val="Embudo y Conversión" aria-pressed="false">Embudo y conversión</button>
+            <button class="chip" data-val="Automatizaciones" aria-pressed="false">Automatizaciones</button>
+          </div><p class="err" id="e-reto"></p></div>
         <div class="fnav"><button class="btn btn-s" data-prev>Atrás</button><button class="btn btn-p" data-next>Continuar</button></div>
       </div>
       <div class="pane">
         <div class="field"><label for="f3">Instagram, TikTok o web</label><input id="f3" placeholder="@inderacoffee"></div>
-        <div class="field"><label for="f4">WhatsApp</label><input id="f4" placeholder="+593 99 123 4567" inputmode="tel"></div>
+        <div class="field"><label for="f4">WhatsApp</label><input id="f4" placeholder="+593 99 123 4567" inputmode="tel" autocomplete="tel" aria-describedby="e4"><p class="err" id="e4"></p></div>
+
+        <!-- Trampa anti-spam: fuera de pantalla, fuera del orden de tabulacion y
+             oculta para lectores de pantalla. Si llega con contenido, es un bot. -->
+        <div class="hp" aria-hidden="true"><label for="f-empresa-2">No rellenar este campo</label><input id="f-empresa-2" tabindex="-1" autocomplete="off"></div>
+
+        <div class="consent">
+          <input type="checkbox" id="consent" aria-describedby="e-consent">
+          <label for="consent"><span class="pend">Texto pendiente de abogado</span>Autorizo a BURNOUT a tratar mis datos personales para responder a esta solicitud y contactarme sobre la auditoría. He leído la <a href="privacidad.html">política de privacidad</a>.</label>
+        </div>
+        <p class="err" id="e-consent"></p>
+
         <div class="fnav"><button class="btn btn-s" data-prev>Atrás</button><button class="btn btn-p" data-send>Enviar y ver agenda</button></div>
+        <p class="fstatus" id="fstatus" role="status" aria-live="polite"></p>
       </div>
       <div class="ok"><svg viewBox="0 0 1000 1000" aria-hidden="true"><use href="#iso"/></svg>
         <h3 style="font-size:24px;margin-bottom:12px">Recibido. Te escribimos por WhatsApp.</h3>

@@ -245,3 +245,48 @@ footer{background:var(--studio);border-top:1px solid rgba(255,255,255,.07);paddi
   #scene{height:100svh}*{animation:none!important;transition-duration:.01ms!important}
   .reveal{opacity:1;transform:none}
 }
+
+/* ── P2 · Formulario real: errores, consentimiento y estados ───────────────
+   Todo lo que se anade aqui nace oculto (.err, .fstatus, .hp) o solo aplica
+   con un atributo que el JS pone en tiempo de ejecucion, salvo el bloque de
+   consentimiento, que es visible por requisito legal. */
+.err{display:none;margin:8px 0 0;max-width:none;font-size:12.5px;line-height:1.45;color:var(--ember)}
+.err.on{display:block}
+input[aria-invalid="true"]{border-color:var(--ember)}
+input[aria-invalid="true"]:focus{border-color:var(--ember);box-shadow:0 0 0 4px rgba(255,77,26,.2)}
+
+/* Fuera de pantalla en vez de display:none: los bots ignoran lo segundo. */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+.consent{display:flex;align-items:flex-start;gap:12px;margin-top:4px}
+.consent input[type="checkbox"]{width:18px;height:18px;flex:none;margin:2px 0 0;padding:0;
+  border-radius:4px;accent-color:var(--core);cursor:pointer}
+.consent label{margin:0;font-family:var(--sans);font-size:12.5px;font-weight:300;line-height:1.55;
+  letter-spacing:normal;text-transform:none;color:rgba(246,245,242,.72);cursor:pointer}
+.consent a{color:var(--surge);text-decoration:underline;text-underline-offset:2px}
+.consent a:hover{color:var(--mist)}
+
+/* Marcador visible de contenido pendiente de redaccion legal. */
+.pend{display:inline-block;margin-right:8px;padding:2px 8px;border:1px dashed var(--ember);
+  border-radius:999px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ember);white-space:nowrap}
+
+.fstatus{display:none;margin-top:16px;max-width:none;font-size:13px;line-height:1.6;color:var(--ash)}
+.fstatus.on{display:block}
+.fstatus.bad{color:var(--ember)}
+.fstatus a{color:var(--surge);text-decoration:underline;text-underline-offset:2px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+
+/* ── P2 · Paginas secundarias (gracias, privacidad) ────────────────────────
+   No tienen escena ni preloader, asi que el nav y la marca —que en la home
+   los revela scene.js— se muestran de entrada. */
+body.page header{opacity:1;transform:none}
+body.page .brand{opacity:1}
+body.page main{padding-top:68px}
+.doc{max-width:68ch}
+.doc h3{font-size:20px;font-weight:500;letter-spacing:-.02em;margin:40px 0 12px}
+.doc p{margin-bottom:16px}
+.doc ul{margin:0 0 16px;padding-left:18px;color:rgba(246,245,242,.72);line-height:1.7}
+.doc li{margin-bottom:8px}
+.aviso{border:1px dashed var(--ember);border-radius:12px;padding:20px 24px;margin-bottom:40px}
+.aviso p{margin:10px 0 0;font-size:14px}
