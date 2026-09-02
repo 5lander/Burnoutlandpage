@@ -10,6 +10,32 @@ el acceso a este directorio en producción.
 | `generar-imagenes.js` | Ejecuta lo anterior en Chrome headless y escribe los archivos. También empaqueta `favicon.ico`. |
 | `validar-jsonld.js` | Valida el JSON-LD contra el vocabulario oficial de schema.org. |
 | `simular-whatsapp.js` | Reproduce lo que hace el rastreador de WhatsApp al pegar el enlace. |
+| `servidor-pruebas.py` | Servidor local: recibe el POST del formulario, sirve `/lento?ms=N` y opcionalmente limita el ancho de banda a 4G. |
+| `medir-contraste.js` | Calcula el contraste WCAG de cada combinación de texto y fondo del sitio. |
+| `medir-particulas.html` | Mide a partir de qué número de partículas el isotipo deja de leerse. |
+| `medir-lcp-cls.html` | Fragmento: mide LCP, CLS, FCP y TTFB y envía el resultado al servidor. |
+| `auditar-a11y.html` | Fragmento: árbol de accesibilidad, recorrido de teclado y qué controles pueden recibir foco. |
+| `auditar-raf.html` | Fragmento: cuenta fotogramas dentro y fuera de la escena y con la pestaña oculta. |
+| `auditar-rm.html` | Fragmento: comprueba que `prefers-reduced-motion` elimina el preloader y congela la escena. |
+| `comparar-graphite.html` | Compara el gris `--graphite` actual con el propuesto para cumplir 4,5:1. |
+
+Los archivos marcados como **fragmento** no se abren solos: se inyectan antes de
+`</body>` de una copia de `index.html`. Por ejemplo:
+
+```bash
+awk 'BEGIN{while((getline l < "tools/auditar-a11y.html")>0) s=s l "
+"} /^<\/body>$/{printf "%s", s} {print}'     index.html > prueba.html
+```
+
+## Por qué las medidas no usan `--virtual-time-budget`
+
+Con esa opción, Chrome headless deja sin fotogramas al `requestAnimationFrame`:
+cualquier medida de animación sale falseada. Por eso `servidor-pruebas.py` ofrece
+`/lento?ms=N`, que retrasa la respuesta y mantiene la página viva en tiempo real,
+y los fragmentos envían su resultado por `fetch` en vez de dejarlo en el DOM.
+
+Ojo: en este build, Chrome headless fija el ancho mínimo de ventana en 500 px,
+así que `--window-size=390,...` no da un viewport de 390.
 
 ## Regenerar iconos e imagen OG
 

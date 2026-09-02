@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Umbral de particulas — BURNOUT</title>
+<!--
+  Mide a partir de cuantas particulas deja de leerse la forma del isotipo.
+
+  Reproduce el muestreo exacto de assets/js/scene.js (misma linea central, mismo
+  HALF, misma dispersion, mismo tamano de particula) y dibuja la figura ya
+  ensamblada al tamano real que tendria en pantalla.
+
+  La referencia NO es el path trazado: seria injusta, porque el trazo incluye
+  zonas (los extremos redondeados) que el muestreo nunca alcanza. La referencia
+  es un muestreo densisimo con el mismo procedimiento, es decir, la region que
+  las particulas pueden ocupar de verdad.
+
+    cobertura : porcentaje de celdas de esa region con al menos una particula.
+    hueco     : lado del mayor cuadrado vacio dentro de la region, en pixeles.
+                Es lo que el ojo percibe como trazo roto.
+-->
+</head>
+<body style="background:#08080C;color:#9A9AAA;font:12px ui-monospace,monospace;padding:16px">
+<pre id="salida">midiendo…</pre>
+<script>
+var HALF = 76.4;          // medio grosor, igual que en scene.js
+var CELDA = 4;            // lado de celda, en pixeles de pantalla
+var pathEl, total;
+
+function escena(W,H){
+  return { scale: Math.min(W,H) * (W>900?0.38:0.52) / 1000, cxp: W*0.5, cyp: H*0.5 };
+}
+
+// Pinta N particulas con el procedimiento de scene.js. tam=null usa el tamano real.
+function pintar(ctx, N, W, H, tam){
+  var e = escena(W,H);
+  ctx.fillStyle = '#fff';
+  for(var i=0;i<N;i++){
+    var l = Math.random()*total;
+    var a = pathEl.getPointAtLength(l), b = pathEl.getPointAtLength(Math.min(total,l+.8));
+    var tx = b.x-a.x, ty = b.y-a.y, m = Math.hypot(tx,ty)||1;
+    var off = (Math.random()*2-1)*HALF;
+    var x = a.x + (-ty/m)*off - 500, y = a.y + (tx/m)*off - 500;
+    var s = tam || (Math.random()*1.3+1.0);
+    ctx.fillRect(e.cxp + x*e.scale, e.cyp + y*e.scale, s, s);
+  }
+}
+
+function lienzo(W,H){ var c=document.createElement('canvas'); c.width=W; c.height=H; return c; }
+
+function celdas(data, W, H, cols){
+  var g = new Uint8Array(cols*Math.ceil(H/CELDA));
+  for(var y=0;y<H;y++) for(var x=0;x<W;x++)
+    if(data[(y*W+x)*4+3]>0) g[((y/CELDA)|0)*cols + ((x/CELDA)|0)] = 1;
+  return g;
+}
+
+function analizar(W,H,Ns){
+  var cols = Math.ceil(W/CELDA), filas = Math.ceil(H/CELDA);
+  // referencia: una sola vez por viewport
+  var rc = lienzo(W,H).getContext('2d');
+  pintar(rc, 60000, W, H, 2);
+  var region = celdas(rc.getImageData(0,0,W,H).data, W, H, cols);
+  var dentro = 0;
+  for(var i=0;i<region.length;i++) if(region[i]) dentro++;
+
+  var filasTexto = [];
+  Ns.forEach(function(N){
+    var cobT=0, hueT=0, reps=4;
+    for(var r=0;r<reps;r++){
+      var pc = lienzo(W,H).getContext('2d');
+      pintar(pc, N, W, H, null);
+      var tiene = celdas(pc.getImageData(0,0,W,H).data, W, H, cols);
+      var cub=0;
+      for(var k=0;k<region.length;k++) if(region[k] && tiene[k]) cub++;
+      cobT += cub/dentro*100;
+      // mayor cuadrado vacio dentro de la region
+      var dp = new Uint16Array(cols*filas), mayor = 0;
+      for(var f=0;f<filas;f++) for(var co=0;co<cols;co++){
+        var q = f*cols+co;
+        if(region[q] && !tiene[q]){
+          dp[q] = (f===0||co===0) ? 1 : 1 + Math.min(dp[q-1], dp[q-cols], dp[q-cols-1]);
+          if(dp[q]>mayor) mayor = dp[q];
+        }
+      }
+      hueT += mayor*CELDA;
+    }
+    var cob = cobT/reps, hue = hueT/reps;
+    filasTexto.push({N:N, cob:cob, hue:hue});
+  });
+  return {filas:filasTexto, celdas:dentro};
+}
+
+fetch('iso-path.txt').then(function(r){return r.text()}).then(function(d){
+  d = d.trim();
+  var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('width','0'); svg.setAttribute('height','0');
+  pathEl = document.createElementNS('http://www.w3.org/2000/svg','path');
+  pathEl.setAttribute('d', d);
+  svg.appendChild(pathEl); document.body.appendChild(svg);
+  total = pathEl.getTotalLength();
+
+  var salida = [];
+  [[1440,900,'escritorio 1440x900   (la escena usa N=7000)',[7000,2800,2600,2500,2400,2200,2000]]
+  ].forEach(function(v){
+    var res = analizar(v[0], v[1], v[3]);
+    salida.push('');
+    salida.push(v[2] + '   region: ' + res.celdas + ' celdas de ' + CELDA + 'px');
+    salida.push('      N   cobertura   mayor hueco');
+    res.filas.forEach(function(f){
+      var marca = f.cob>=97 ? '' : (f.cob>=94 ? '   <- se empieza a notar' : '   <- roto');
+      salida.push('   '+String(f.N).padStart(5)+'   '+f.cob.toFixed(1).padStart(6)+' %   '+
+                  f.hue.toFixed(1).padStart(6)+' px'+marca);
+    });
+  });
+  document.getElementById('salida').textContent = salida.join('\n');
+  document.title = 'LISTO';
+}).catch(function(e){ document.getElementById('salida').textContent = 'ERROR: '+e; });
+</script>
+</body>
+</html>

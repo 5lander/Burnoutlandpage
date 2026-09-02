@@ -290,3 +290,24 @@ body.page main{padding-top:68px}
 .doc li{margin-bottom:8px}
 .aviso{border:1px dashed var(--ember);border-radius:12px;padding:20px 24px;margin-bottom:40px}
 .aviso p{margin:10px 0 0;font-size:14px}
+
+/* ── P4 · Accesibilidad ────────────────────────────────────────────────────
+   Las cinco capas de la escena y las cuatro etiquetas se apagaban solo con
+   opacity, asi que seguian en el arbol de accesibilidad y, peor, sus enlaces
+   seguian siendo tabulables: el teclado caia en botones invisibles. Con
+   visibility salen de ambos.
+
+   El retardo importa: al mostrar, visibility cambia al instante; al ocultar,
+   espera a que termine el fundido de .45s. El resultado visual es identico. */
+.layer{visibility:hidden;transition:opacity .45s ease,visibility 0s linear .45s}
+.layer.on{visibility:visible;transition:opacity .45s ease,visibility 0s}
+.tag{visibility:hidden;transition:opacity .45s,visibility 0s linear .45s}
+.tag.on{visibility:visible;transition:opacity .45s,visibility 0s}
+
+/* input:focus quitaba el contorno tambien para el teclado; el resplandor solo
+   no basta como indicador de foco. Esto no cambia nada para el raton. */
+input:focus-visible{outline:2px solid var(--surge);outline-offset:2px}
+
+@media(prefers-reduced-motion:reduce){
+  .layer,.layer.on,.tag,.tag.on{transition-delay:0s}
+}

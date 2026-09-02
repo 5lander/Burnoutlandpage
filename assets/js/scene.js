@@ -13,7 +13,18 @@ function resize(){
 }
 
 // --- muestreo del isotipo real (línea central + grosor) ---
-var N = window.innerWidth < 760 ? 2600 : 7000;
+// El numero de particulas baja en equipos de pocos nucleos. El umbral es
+// hardwareConcurrency >= 4: a partir de ahi N no se toca y el render es
+// identico al aprobado. Por debajo se escala proporcionalmente, con un suelo
+// medido (tools/medir-particulas.html): es el N a partir del cual el trazo
+// abre huecos mayores que los del propio render aprobado, 2400 en escritorio
+// y 800 en movil. Se redondea a 2500 y 800 por margen.
+// Si el navegador no expone hardwareConcurrency se asume 4, es decir, sin cambio.
+var movil = window.innerWidth < 760;
+var N_BASE = movil ? 2600 : 7000;
+var N_MIN  = movil ? 800 : 2500;
+var nucleos = navigator.hardwareConcurrency || 4;
+var N = nucleos >= 4 ? N_BASE : Math.max(N_MIN, Math.round(N_BASE * nucleos / 4));
 var HALF = 76.4;               // medio grosor en unidades del viewBox
 var P = [];
 var total = path.getTotalLength();
@@ -77,6 +88,8 @@ var pbar = document.getElementById('pbar'), phase = document.getElementById('pha
     head = document.getElementById('head'), hint = document.querySelector('.hint');
 var PH = ['01 · EL PROBLEMA','02 · EL GIRO','03 · LO QUE HACEMOS','04 · BURNOUT'];
 var prog = 0, target = 0;
+// estado del bucle: se define aqui porque frame() lo consulta (ver mas abajo)
+var corriendo = false, enPantalla = true, visible = true;
 
 function scroll(){
   var r = scene.getBoundingClientRect();
@@ -243,8 +256,29 @@ function frame(){
     tg.style.transform = 'translate(-50%,-50%) translate('+tx+'px,'+ty+'px)';
   });
 
+  if(corriendo) requestAnimationFrame(frame);
+}
+
+// --- el bucle solo corre cuando la escena se ve y la pestaña esta delante ---
+// Mientras el usuario lee el formulario o se va a otra pestaña no hay motivo
+// para seguir pintando: son 7000 particulas por fotograma quemando bateria.
+function arrancar(){
+  if(corriendo || reduce) return;
+  corriendo = true;
+  // Al reanudar se relee el scroll y se sincroniza prog con target. Sin esto el
+  // bucle arrastraria el valor congelado y recuperaria la fase con una animacion
+  // visible: la escena entraria en una fase que no corresponde al scroll real.
+  scroll();
+  prog = target;
   requestAnimationFrame(frame);
 }
+function parar(){ corriendo = false; }
+function revisar(){ (visible && enPantalla) ? arrancar() : parar(); }
+
+document.addEventListener('visibilitychange', function(){
+  visible = !document.hidden;
+  revisar();
+});
 
 resize(); scroll();
 if(reduce){
@@ -254,5 +288,13 @@ if(reduce){
   var sc = Math.min(W,H)*0.46/1000;
   P.forEach(function(o){ ctx.fillStyle=o.c; ctx.fillRect(W*0.5+o.bx*sc, H*0.5+o.by*sc, 1.6,1.6); });
   layers[0].classList.add('on'); head.classList.add('in');
-} else { requestAnimationFrame(frame); }
+} else {
+  if(typeof IntersectionObserver === 'function'){
+    new IntersectionObserver(function(es){
+      enPantalla = es[0].isIntersecting;
+      revisar();
+    }, {threshold:0}).observe(stage);
+  }
+  arrancar();
+}
 })();

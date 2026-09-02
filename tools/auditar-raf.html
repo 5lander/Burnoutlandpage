@@ -1,0 +1,44 @@
+<script>
+// Medicion con reloj real. Los resultados se envian al servidor de pruebas
+// porque --dump-dom no espera: con --virtual-time-budget el rAF se muere de
+// hambre y sin el, Chrome vuelca el DOM antes de que termine la medida.
+(function(){
+ var r={pasos:[]};
+ function esperar(ms){return new Promise(function(s){setTimeout(s,ms)});}
+ function mide(etq,ms){ var a=window.__raf; return esperar(ms).then(function(){
+   r.pasos.push(etq+': '+(window.__raf-a)+' fotogramas en '+ms+'ms'); }); }
+ function pbar(){ return document.getElementById('pbar').style.transform; }
+ var esc=document.getElementById('scene'), stg=document.getElementById('stage');
+ document.documentElement.style.scrollBehavior='auto';
+ Promise.resolve()
+  .then(function(){ return esperar(500); })
+  .then(function(){ window.scrollTo(0,1500); return esperar(500); })
+  .then(function(){ return mide('A · escena a la vista       ',900); })
+  .then(function(){ r.progDentro=pbar(); r.faseDentro=document.getElementById('phase').textContent;
+                    window.scrollTo(0,7500); return esperar(700); })
+  .then(function(){ return mide('B · escena fuera de pantalla',1100); })
+  .then(function(){ r.progFuera=pbar(); window.scrollTo(0,3000); return esperar(150); })
+  .then(function(){ r.progJustoAlVolver=pbar(); return mide('C · escena de vuelta       ',900); })
+  .then(function(){
+     r.progTrasVolver=pbar();
+     r.faseTrasVolver=document.getElementById('phase').textContent;
+     r.recorrido=esc.offsetHeight-stg.offsetHeight;
+     r.progEsperado='scaleX('+(3000/r.recorrido).toFixed(4)+')';
+     // ahora la pestana pasa a oculta
+     Object.defineProperty(document,'hidden',{value:true,configurable:true});
+     Object.defineProperty(document,'visibilityState',{value:'hidden',configurable:true});
+     document.dispatchEvent(new Event('visibilitychange'));
+     return mide('D · pestana oculta         ',1000);
+  })
+  .then(function(){
+     Object.defineProperty(document,'hidden',{value:false,configurable:true});
+     Object.defineProperty(document,'visibilityState',{value:'visible',configurable:true});
+     document.dispatchEvent(new Event('visibilitychange'));
+     return mide('E · pestana de vuelta      ',900);
+  })
+  .then(function(){
+     return fetch('/resultado',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)});
+  });
+})();
+</script>
+<img src="/lento?ms=12000" alt="" width="1" height="1" style="position:absolute;left:-9999px">

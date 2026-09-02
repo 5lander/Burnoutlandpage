@@ -1,0 +1,28 @@
+<script>
+addEventListener('load',function(){setTimeout(function(){
+  var r={};
+  // Intento real de enfocar: si el navegador lo rechaza, activeElement no cambia.
+  function intenta(el,etiqueta){
+    document.body.focus();
+    var antes=document.activeElement;
+    try{ el.focus(); }catch(e){}
+    var logrado = document.activeElement===el;
+    return etiqueta+' -> '+(logrado?'RECIBE FOCO':'no recibe foco');
+  }
+  r.capasOcultas=[1,2,3,4].map(function(i){
+    var a=document.getElementById('l'+i).querySelector('a,button');
+    return a? intenta(a,'l'+i+' "'+a.textContent.trim().slice(0,20)+'"') : 'l'+i+' sin controles';
+  });
+  var chip=document.querySelector('.chip');
+  r.chipPaso2=intenta(chip,'chip "'+chip.textContent.trim()+'" (paso 2 oculto)');
+  var env=document.querySelector('[data-send]');
+  r.envioPaso3=intenta(env,'boton enviar (paso 3 oculto)');
+  var hp=document.getElementById('f-empresa-2');
+  r.honeypot=intenta(hp,'honeypot');
+  // ahora se abre el paso 2 y se comprueba que SI recibe foco
+  document.querySelectorAll('[data-next]')[0].click();
+  r.chipTrasAbrirPaso2=intenta(document.querySelector('.chip'),'chip con el paso 2 abierto');
+  var p=document.createElement('pre');p.id='dbg';p.textContent=JSON.stringify(r,null,1);
+  document.body.appendChild(p);
+},1600);});
+</script>

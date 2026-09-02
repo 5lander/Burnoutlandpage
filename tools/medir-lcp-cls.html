@@ -1,0 +1,41 @@
+<script>
+// LCP, CLS y otras marcas. Se envian al servidor sin limitar (8732) para que la
+// propia medicion no consuma el ancho de banda simulado de la pagina.
+(function(){
+  var r={lcp:null,lcpElemento:null,cls:0,fuentes:[],fcp:null,ttfb:null,dcl:null,load:null};
+  try{
+    new PerformanceObserver(function(l){
+      var es=l.getEntries(), e=es[es.length-1];
+      r.lcp=Math.round(e.startTime);
+      r.lcpElemento=e.element ? (e.element.tagName+(e.element.id?'#'+e.element.id:'')+(e.element.className?'.'+String(e.element.className).split(' ')[0]:'')) : (e.url||'?');
+      r.lcpTamano=Math.round(e.size);
+    }).observe({type:'largest-contentful-paint',buffered:true});
+  }catch(e){}
+  try{
+    new PerformanceObserver(function(l){
+      l.getEntries().forEach(function(e){
+        if(e.hadRecentInput) return;
+        r.cls+=e.value;
+        if(e.value>0.001) r.fuentes.push({valor:+e.value.toFixed(4), t:Math.round(e.startTime),
+          nodos:(e.sources||[]).map(function(s){return s.node?(s.node.tagName||'')+(s.node.id?'#'+s.node.id:'')+(s.node.className?'.'+String(s.node.className).split(' ')[0]:''):'?'}).join(', ')});
+      });
+    }).observe({type:'layout-shift',buffered:true});
+  }catch(e){}
+  try{
+    new PerformanceObserver(function(l){
+      l.getEntries().forEach(function(e){ if(e.name==='first-contentful-paint') r.fcp=Math.round(e.startTime); });
+    }).observe({type:'paint',buffered:true});
+  }catch(e){}
+  function enviar(){
+    var n=performance.getEntriesByType('navigation')[0];
+    if(n){ r.ttfb=Math.round(n.responseStart); r.dcl=Math.round(n.domContentLoadedEventEnd); r.load=Math.round(n.loadEventEnd); }
+    r.cls=+r.cls.toFixed(4);
+    r.viewport=innerWidth+'x'+innerHeight;
+    r.recursos=performance.getEntriesByType('resource').filter(function(e){return e.name.indexOf('lento')<0})
+      .map(function(e){return e.name.split('/').pop()+' '+Math.round(e.responseEnd)+'ms '+(e.transferSize||0)+'B'});
+    fetch('http://127.0.0.1:8732/resultado',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)});
+  }
+  setTimeout(enviar, 9000);
+})();
+</script>
+<img src="http://127.0.0.1:8733/lento?ms=13000" alt="" width="1" height="1" style="position:absolute;left:-9999px">

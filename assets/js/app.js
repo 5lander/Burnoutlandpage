@@ -59,8 +59,16 @@ var hayWhatsapp = /^\d{8,15}$/.test(WHATSAPP);
 var panes=[].slice.call(document.querySelectorAll('.pane')), dots=[].slice.call(document.querySelectorAll('.steps i')),
     ok=document.querySelector('.ok'), step=0, challenge='—';
 function show(n){panes.forEach(function(p,i){p.classList.toggle('on',i===n)});dots.forEach(function(d,i){d.classList.toggle('on',i<=n)});step=n}
-document.querySelectorAll('[data-next]').forEach(function(b){b.onclick=function(){show(step+1)}});
-document.querySelectorAll('[data-prev]').forEach(function(b){b.onclick=function(){show(step-1)}});
+// Al cambiar de paso, el boton que se acaba de pulsar desaparece con display:none
+// y el foco se cae al body: con teclado se pierde el hilo. Se lleva al primer
+// control del paso nuevo.
+function foco(n){
+  var p = panes[n]; if(!p) return;
+  var c = p.querySelector('input:not([tabindex="-1"]), button, a, select, textarea');
+  if(c) c.focus();
+}
+document.querySelectorAll('[data-next]').forEach(function(b){b.onclick=function(){show(step+1);foco(step)}});
+document.querySelectorAll('[data-prev]').forEach(function(b){b.onclick=function(){show(step-1);foco(step)}});
 document.querySelectorAll('.chip').forEach(function(c){c.onclick=function(){
   document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('sel');x.setAttribute('aria-pressed','false')});
   c.classList.add('sel'); c.setAttribute('aria-pressed','true'); challenge=c.dataset.val; limpiar('e-reto');
