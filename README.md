@@ -13,6 +13,7 @@ Dominio: burnout.ec · Hosting: Hostinger (despliegue por Git)
 | `assets/css/style.css` | Todos los estilos |
 | `assets/js/scene.js` | Sistema de partículas y escena animada del canvas |
 | `assets/js/app.js` | Preloader, reveals y formulario |
+| `assets/fonts/` | Poppins y JetBrains Mono en woff2, autoalojadas |
 | `.htaccess` | Fuerza HTTPS, canoniza sin `www`, cache y compresión |
 | `robots.txt` | Indexación abierta + referencia al sitemap |
 | `sitemap.xml` | Una sola URL por ahora |
