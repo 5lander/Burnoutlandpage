@@ -1,0 +1,3 @@
+# Utilidades de desarrollo. Se versionan para poder regenerar los iconos y la
+# imagen OG, pero no deben servirse en produccion.
+Require all denied

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Generador de iconos e imagen OG — BURNOUT</title>
+<!--
+  Dibuja el favicon, el apple-touch-icon y la imagen de Open Graph a partir del
+  path del isotipo (tools/iso-path.txt, copiado literal del <path id="iso"> de
+  index.html) y de Poppins 700 autoalojada. No hay recortes de capturas.
+
+  No se abre a mano: lo ejecuta tools/generar-imagenes.js con Chrome headless,
+  que recoge los data URL de aqui y los escribe en assets/img/.
+-->
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body style="background:#08080C">
+<pre id="salida">generando…</pre>
+<script>
+var PALETA = { onyx:'#08080C', bone:'#F6F5F2', core:'#6C2BFF', ash:'#9A9AAA', ember:'#FF4D1A' };
+var GROSOR = 152.79;          // stroke-width del isotipo, igual que en el SVG
+var VIEWBOX = 1000;
+
+function cargarPath(){
+  return fetch('iso-path.txt').then(function(r){ return r.text(); }).then(function(t){
+    return new Path2D(t.trim());
+  });
+}
+
+// El isotipo, centrado en un cuadrado de lado `lado` a partir de (x,y).
+function dibujarIso(ctx, iso, x, y, lado, color){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(lado/VIEWBOX, lado/VIEWBOX);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = GROSOR;
+  ctx.lineCap = 'round';
+  ctx.stroke(iso);
+  ctx.restore();
+}
+
+// --- icono cuadrado: fondo onyx a sangre y el isotipo centrado ---
+function icono(iso, lado){
+  var c = document.createElement('canvas');
+  c.width = c.height = lado;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = PALETA.onyx;
+  ctx.fillRect(0, 0, lado, lado);
+  // el trazo del isotipo se sale del viewBox por el lineCap redondo,
+  // asi que se deja un margen del 14% para que no se recorte
+  var margen = lado * 0.14, util = lado - margen * 2;
+  dibujarIso(ctx, iso, margen, margen, util, PALETA.bone);
+  return c.toDataURL('image/png');
+}
+
+// --- imagen Open Graph 1200x630 ---
+function og(iso){
+  var W = 1200, H = 630;
+  var c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  var ctx = c.getContext('2d');
+
+  ctx.fillStyle = PALETA.onyx;
+  ctx.fillRect(0, 0, W, H);
+
+  // el mismo halo de la escena, para que la miniatura no sea un rectangulo plano
+  var g = ctx.createRadialGradient(W/2, H*0.44, 0, W/2, H*0.44, W*0.42);
+  g.addColorStop(0,   'rgba(108,43,255,0.28)');
+  g.addColorStop(0.55,'rgba(62,18,176,0.10)');
+  g.addColorStop(1,   'rgba(8,8,12,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  // Lockup: isotipo + BURNOUT, en horizontal. Se dimensiona para caber dentro
+  // del cuadrado central de 630x630, que es lo unico que sobrevive si WhatsApp
+  // recorta la miniatura a cuadrado.
+  var ANCHO_SEGURO = 560;
+  var tam = 150;                                   // tamano de partida
+  ctx.font = '700 ' + tam + 'px Poppins, system-ui, sans-serif';
+  var anchoTexto = ctx.measureText('BURNOUT').width;
+  var isoLado = tam * 1.02;
+  var hueco = tam * 0.30;
+  var total = isoLado + hueco + anchoTexto;
+  var k = ANCHO_SEGURO / total;                    // escala para encajar
+  tam *= k; isoLado *= k; hueco *= k; total = ANCHO_SEGURO;
+
+  ctx.font = '700 ' + tam + 'px Poppins, system-ui, sans-serif';
+  anchoTexto = ctx.measureText('BURNOUT').width;
+  total = isoLado + hueco + anchoTexto;
+
+  var x0 = (W - total) / 2, cy = H * 0.44;
+  dibujarIso(ctx, iso, x0, cy - isoLado/2, isoLado, PALETA.bone);
+
+  ctx.fillStyle = PALETA.bone;
+  ctx.textBaseline = 'middle';
+  ctx.fillText('BURNOUT', x0 + isoLado + hueco, cy + tam * 0.02);
+
+  // Bajada en mono, con el mismo espaciado de letra que el resto del sitio
+  var bajada = 'AGENCIA CREATIVA · ECUADOR';
+  var tamMono = 26, esp = 9.5;
+  ctx.font = '400 ' + tamMono + 'px "JetBrains Mono", monospace';
+  var anchoBajada = 0, i;
+  for(i = 0; i < bajada.length; i++) anchoBajada += ctx.measureText(bajada[i]).width + esp;
+  anchoBajada -= esp;
+  var bx = (W - anchoBajada) / 2, by = cy + isoLado * 0.72 + 46;
+  ctx.fillStyle = PALETA.ash;
+  for(i = 0; i < bajada.length; i++){
+    ctx.fillText(bajada[i], bx, by);
+    bx += ctx.measureText(bajada[i]).width + esp;
+  }
+
+  // punto ember, el mismo acento del eyebrow de la portada
+  ctx.beginPath();
+  ctx.arc(W/2, H - 74, 5, 0, Math.PI*2);
+  ctx.fillStyle = PALETA.ember;
+  ctx.fill();
+
+  // JPEG y no PNG: el degradado hace que el PNG pase de 600 KB, y por encima
+  // de ese peso WhatsApp deja de renderizar la previsualizacion del enlace.
+  return c.toDataURL('image/jpeg', 0.92);
+}
+
+Promise.all([cargarPath(), document.fonts.load('700 150px Poppins'), document.fonts.load('400 26px "JetBrains Mono"')])
+ .then(function(r){
+   var iso = r[0];
+   return document.fonts.ready.then(function(){ return iso; });
+ })
+ .then(function(iso){
+   var salida = {
+     'favicon-16.png':  icono(iso, 16),
+     'favicon-32.png':  icono(iso, 32),
+     'favicon-48.png':  icono(iso, 48),
+     'favicon-180.png': icono(iso, 180),
+     'favicon-512.png': icono(iso, 512),
+     'og.jpg':          og(iso)
+   };
+   var pre = document.createElement('pre');
+   pre.id = 'datos';
+   pre.textContent = JSON.stringify(salida);
+   document.body.appendChild(pre);
+   document.getElementById('salida').textContent = 'listo';
+   document.title = 'LISTO';
+ })
+ .catch(function(e){
+   document.getElementById('salida').textContent = 'ERROR: ' + e;
+   document.title = 'ERROR';
+ });
+</script>
+</body>
+</html>
