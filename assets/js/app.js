@@ -107,9 +107,29 @@ function viaWhatsapp(){
 }
 
 // --- validacion ---
-// Telefono internacional: admite espacios y separadores al escribir; se valida
-// sobre los digitos, en formato E.164 (+ y de 8 a 15 digitos, sin cero inicial).
-function telValido(s){ return /^\+[1-9]\d{7,14}$/.test((s||'').replace(/[\s()-]/g,'')); }
+// Telefono. Se acepta como lo escribe la gente aqui y se normaliza a formato
+// internacional antes de enviar. Espacios, guiones, puntos y parentesis dan igual:
+//   0991234567   09 9123 4567   ->  +593991234567
+//   991234567                    ->  +593991234567
+//   593991234567                 ->  +593991234567
+//   +593 99 123 4567             ->  +593991234567
+// Un numero de otro pais escrito con + se acepta tal cual, sin tocarlo.
+// Devuelve null solo si no puede ser un movil ecuatoriano ni un internacional.
+function normalizarTel(bruto){
+  var s = (bruto||'').replace(/[\s().\-]/g,'');
+  if(!s) return null;
+
+  // Internacional de otro pais: se respeta literalmente.
+  if(s.charAt(0)==='+' && s.slice(0,4)!=='+593'){
+    return /^\+[1-9]\d{6,14}$/.test(s) ? s : null;
+  }
+
+  // Ecuador: nos quedamos con el numero nacional y le quitamos el cero de marcado.
+  var n = s.replace(/^\+?593/,'').replace(/^\+/,'');
+  if(!/^\d+$/.test(n)) return null;
+  n = n.replace(/^0/,'');
+  return /^9\d{8}$/.test(n) ? '+593'+n : null;   // movil: 9 seguido de 8 digitos
+}
 
 function validar(){
   var fallos=[];
@@ -127,8 +147,8 @@ function validar(){
   if(!tel){
     marcar('e4','f4','Necesitamos un WhatsApp para responderte.');
     fallos.push({pane:2, foco:'f4'});
-  } else if(!telValido(tel)){
-    marcar('e4','f4','Escríbelo en formato internacional, con el código de país. Ejemplo: +593 99 123 4567.');
+  } else if(!normalizarTel(tel)){
+    marcar('e4','f4','Ese número no parece un WhatsApp válido. Escríbelo como 0991234567 o como +593 99 123 4567.');
     fallos.push({pane:2, foco:'f4'});
   }
   if(chkConsent && !chkConsent.checked){
@@ -139,10 +159,11 @@ function validar(){
 }
 
 // --- payload ---
-// El mismo objeto que se pinta en pantalla es el que se envia, para que el
-// bloque .payload no pueda divergir nunca de lo que recibe n8n.
+// Este es el objeto que viaja en el POST. Los campos opcionales vacios van como
+// cadena vacia, no como guion: el guion es un adorno de la demo y haria pasar
+// cualquier comprobacion de "campo no vacio" en n8n.
 function construirPayload(){
-  var v=function(id){ return document.getElementById(id).value.trim() || '—'; };
+  var v=function(id){ return document.getElementById(id).value.trim(); };
   return {
     event: 'lead.audit_requested',
     timestamp: new Date().toISOString(),
@@ -151,14 +172,16 @@ function construirPayload(){
       company_brand: v('f2'),
       social_or_web: v('f3'),
       main_challenge: challenge,
-      whatsapp_phone: v('f4'),
+      whatsapp_phone: normalizarTel(v('f4')) || '',
       source_campaign: 'landing_organico'
     }
   };
 }
+// El bloque de pantalla muestra el mismo objeto, con una sola licencia: pinta un
+// guion donde el POST lleva cadena vacia, para que el hueco se vea.
 function pintarPayload(p){
-  var d=p.data;
-  document.getElementById('payload').innerHTML='{\n  <b>"event"</b>: "'+esc(p.event)+'",\n  <b>"timestamp"</b>: "'+esc(p.timestamp)+'",\n  <b>"data"</b>: {\n    <b>"full_name"</b>: "'+esc(d.full_name)+'",\n    <b>"company_brand"</b>: "'+esc(d.company_brand)+'",\n    <b>"social_or_web"</b>: "'+esc(d.social_or_web)+'",\n    <b>"main_challenge"</b>: "'+esc(d.main_challenge)+'",\n    <b>"whatsapp_phone"</b>: "'+esc(d.whatsapp_phone)+'",\n    <b>"source_campaign"</b>: "'+esc(d.source_campaign)+'"\n  }\n}';
+  var d=p.data, g=function(x){ return esc(x) || '—'; };
+  document.getElementById('payload').innerHTML='{\n  <b>"event"</b>: "'+g(p.event)+'",\n  <b>"timestamp"</b>: "'+g(p.timestamp)+'",\n  <b>"data"</b>: {\n    <b>"full_name"</b>: "'+g(d.full_name)+'",\n    <b>"company_brand"</b>: "'+g(d.company_brand)+'",\n    <b>"social_or_web"</b>: "'+g(d.social_or_web)+'",\n    <b>"main_challenge"</b>: "'+g(d.main_challenge)+'",\n    <b>"whatsapp_phone"</b>: "'+g(d.whatsapp_phone)+'",\n    <b>"source_campaign"</b>: "'+g(d.source_campaign)+'"\n  }\n}';
 }
 
 // --- envio ---
