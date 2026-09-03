@@ -64,7 +64,8 @@ a{color:inherit;text-decoration:none}
 section{position:relative;padding-block:clamp(80px,12vh,160px);scroll-margin-top:68px}
 :focus-visible{outline:2px solid var(--surge);outline-offset:3px;border-radius:4px}
 .btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:12px 24px;font-size:14px;
-  font-weight:500;cursor:pointer;border:1px solid transparent;transition:.3s;font-family:var(--sans)}
+  font-weight:500;cursor:pointer;border:1px solid transparent;transition:.3s;font-family:var(--sans);
+  background:transparent}
 .btn-p{background:var(--core);color:#fff}
 .btn-p:hover{background:#7d43ff;box-shadow:0 0 0 6px rgba(108,43,255,.18)}
 .btn-s{border-color:rgba(255,255,255,.18);color:var(--bone)}
