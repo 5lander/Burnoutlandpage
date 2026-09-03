@@ -40,8 +40,17 @@
 
 <!--
   Datos estructurados. Solo se declara lo que ya aparece en la pagina.
-  Lo que falta va como PENDIENTE_* para que sea greppable, o se omite:
-  ver el resumen de P3 para la lista completa.
+
+  P6: se retira el nodo LocalBusiness. Exigia una direccion postal que no
+  tenemos, y publicarla como marcador habria dejado "PENDIENTE_DIRECCION"
+  indexable. Ademas Google no genera resultado enriquecido de LocalBusiness sin
+  address valida, asi que se corria el riesgo sin ninguna ventaja, y la pagina
+  no muestra ninguna calle: los datos estructurados deben coincidir con lo
+  visible. Organization dice todo lo que si podemos afirmar, y areaServed
+  (Quito, Loja, Ecuador) conserva la senal geografica.
+
+  Para recuperarlo cuando llegue la direccion, ver el README, seccion
+  "Datos estructurados".
 -->
 <script type="application/ld+json">
 {
@@ -61,24 +70,6 @@
         "height": 512
       },
       "image": "https://burnout.ec/assets/img/og.jpg",
-      "areaServed": { "@type": "Country", "name": "Ecuador" }
-    },
-    {
-      "@type": "LocalBusiness",
-      "@id": "https://burnout.ec/#negocio",
-      "parentOrganization": { "@id": "https://burnout.ec/#organizacion" },
-      "name": "BURNOUT",
-      "url": "https://burnout.ec/",
-      "email": "hola@burnout.ec",
-      "description": "Agencia creativa ecuatoriana. Estrategia, identidad de marca, produccion audiovisual, desarrollo web y automatizaciones.",
-      "image": "https://burnout.ec/assets/img/og.jpg",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "PENDIENTE_DIRECCION",
-        "addressLocality": "Quito",
-        "postalCode": "PENDIENTE_CODIGO_POSTAL",
-        "addressCountry": "EC"
-      },
       "areaServed": [
         { "@type": "City", "name": "Quito" },
         { "@type": "City", "name": "Loja" },

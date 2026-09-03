@@ -14,7 +14,8 @@ Opcionalmente aplica limitacion de ancho de banda y latencia para emular 4G:
 import http.server, socketserver, os, sys, time, base64, threading
 from urllib.parse import urlparse, parse_qs
 
-ROOT = r"c:\Projects\Burnoutlandpage"
+# La raiz del repositorio, deducida de la ubicacion de este archivo.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PORT = 8733
 LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "recibido.json")
 

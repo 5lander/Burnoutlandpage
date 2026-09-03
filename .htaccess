@@ -1,22 +1,69 @@
-# Forzar HTTPS y dominio canonico sin www
+# ── Sin listados de directorio ──────────────────────────────────────────────
+# Sin esto, /assets/fonts/ y /assets/img/ devuelven un indice navegable.
+#
+# CUIDADO: algunos hospedajes compartidos no permiten Options en un .htaccess
+# (AllowOverride sin Options). En ese caso el servidor devuelve 500 en TODO el
+# sitio. Si eso pasa tras el primer push, comenta esta linea y vuelve a subir:
+# es la primera sospechosa. Ver el README, paso 1 de la revision.
+Options -Indexes
+
 RewriteEngine On
+
+# ── tools/ fuera de produccion ──────────────────────────────────────────────
+# Segunda linea de defensa. La primera es tools/.htaccess; esta vive en el
+# .htaccess raiz para que siga cubriendo aunque el servidor solo lea el de
+# arriba. Ninguna de las dos es una garantia estructural: si la integracion Git
+# copia el repositorio entero, los archivos ESTAN en public_html y esto solo
+# impide servirlos. Ver el README, "tools/ en produccion".
+RewriteRule ^tools/ - [F,L]
+
+# Ni codigo de utilidades ni documentacion interna, esten donde esten.
+<FilesMatch "\.(py|md)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# ── HTTPS forzado y dominio canonico sin www ────────────────────────────────
+# Se leen como: (no es https O el host empieza por www) Y el host es cualquiera,
+# capturando la parte sin www en %1.
+#
+# Si tras el primer push aparece un bucle de redirecciones, la causa es que el
+# servidor termina TLS en un proxy y %{HTTPS} llega en off aunque la peticion
+# venga por https. En ese caso, sustituir la primera condicion por:
+#     RewriteCond %{HTTP:X-Forwarded-Proto} !https [OR]
 RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
 RewriteRule ^ https://%1%{REQUEST_URI} [L,NE,R=301]
 
-# Cache de estaticos
+# ── Cache de estaticos ──────────────────────────────────────────────────────
+# Los nombres de archivo no llevan huella, asi que un ano solo es seguro
+# mientras el nombre no cambie. Al sustituir una fuente o un icono hay que
+# renombrarlo, no sobrescribirlo. El HTML no se cachea nunca.
 <IfModule mod_expires.c>
   ExpiresActive On
-  ExpiresByType text/css "access plus 1 year"
-  ExpiresByType application/javascript "access plus 1 year"
-  ExpiresByType font/woff2 "access plus 1 year"
-  ExpiresByType image/jpeg "access plus 6 months"
-  ExpiresByType image/png "access plus 6 months"
-  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType text/javascript           "access plus 1 year"
+  ExpiresByType font/woff2                "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 6 months"
+  ExpiresByType image/png                 "access plus 6 months"
+  ExpiresByType image/svg+xml             "access plus 6 months"
+  ExpiresByType image/x-icon              "access plus 6 months"
+  ExpiresByType image/vnd.microsoft.icon  "access plus 6 months"
+  ExpiresByType text/html                 "access plus 0 seconds"
 </IfModule>
 
-# Compresion
+# ── Compresion ──────────────────────────────────────────────────────────────
+# Las woff2 y los JPEG/PNG ya vienen comprimidos: volver a pasarlos por deflate
+# gasta CPU y no baja el peso.
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript text/javascript
+  AddOutputFilterByType DEFLATE image/svg+xml application/json
 </IfModule>

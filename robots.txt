@@ -1,4 +1,20 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# INDEXACION BLOQUEADA A PROPOSITO.
+#
+# Este despliegue no es lanzable: el formulario no envia, los textos legales
+# estan sin redactar y el portafolio son rectangulos de color. Que Google
+# indexe eso deja en el buscador una politica de privacidad que dice
+# "Pendiente de abogado" y un formulario roto, y quitarlo despues es lento.
+#
+# PARA PUBLICAR: cambiar la linea "Disallow: /" por "Allow: /" y volver a
+# subir. Es el punto 1 de la lista previa al lanzamiento del README.
+# ─────────────────────────────────────────────────────────────────────────────
+
 User-agent: *
-Allow: /
+Disallow: /
+
+# Utilidades de desarrollo. El servidor deberia devolver 403 (ver .htaccess);
+# esto es la red por si no lo hace.
+Disallow: /tools/
 
 Sitemap: https://burnout.ec/sitemap.xml

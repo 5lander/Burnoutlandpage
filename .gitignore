@@ -6,3 +6,4 @@ node_modules/
 
 # Salida de las herramientas de tools/, no forma parte del sitio
 tools/resultado-*.json
+tools/recibido.json
