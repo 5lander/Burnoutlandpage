@@ -18,6 +18,9 @@ el acceso a este directorio en producción.
 | `auditar-raf.html` | Fragmento: cuenta fotogramas dentro y fuera de la escena y con la pestaña oculta. |
 | `auditar-rm.html` | Fragmento: comprueba que `prefers-reduced-motion` elimina el preloader y congela la escena. |
 | `comparar-graphite.html` | Compara el gris `--graphite` actual con el propuesto para cumplir 4,5:1. |
+| `servidor-medicion.py` | Sirve el sitio real parcheando al vuelo las constantes marcadas de `medicion.js`, anota todas las peticiones y sabe inyectar fragmentos con `?frag=`. |
+| `auditar-medicion.html` | Comprueba el consentimiento entero: nada antes de aceptar, aceptar carga y vacía la cola, rechazar no carga ni reintenta, y los cinco eventos. |
+| `auditar-medicion-raf.html` | Fragmento: censa los listeners de scroll y cuenta fotogramas, para verificar que el evento de la mitad de la escena no despierta el bucle. |
 
 Los archivos marcados como **fragmento** no se abren solos: se inyectan antes de
 `</body>` de una copia de `index.html`. Por ejemplo:

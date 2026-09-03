@@ -53,6 +53,9 @@ const CASOS = [
   ['.pill / .tile .mono',     PAL.mist, 0.7,  PAL.bg,     10, false, false],
   ['.badge',                  PAL.ember, 1,   PAL.bg,      9, false, false],
   ['.btn-p (texto en boton)', [255,255,255], 1, PAL.core,  14, false, true],
+  ['.ck-t (aviso medicion)',  PAL.ash, 1,     PAL.studio, 13, false, true],
+  ['.ck-t a (enlace)',        PAL.surge, 1,   PAL.studio, 13, false, true],
+  ['.ck .btn (aceptar/rechazar)', PAL.bone, 1, PAL.studio, 13, false, true],
 ];
 
 // WCAG: 3:1 basta para texto grande (>=24px, o >=18.66px en negrita)

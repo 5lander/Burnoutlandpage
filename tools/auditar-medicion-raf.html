@@ -1,0 +1,70 @@
+<!--
+  Fragmento. Se inyecta en index.html con tools/servidor-medicion.py:
+
+      python tools/servidor-medicion.py
+      http://127.0.0.1:8734/index.html?frag=auditar-medicion-raf.html
+
+  Responde a las dos advertencias de P5 sobre el evento de la mitad de la escena:
+
+    · que no anada un listener de scroll sin limitar. Se censan todos los
+      registros de 'scroll' de la pagina envolviendo addEventListener antes de
+      que corra ningun script del sitio.
+    · que no reanime el bucle de requestAnimationFrame apagado en P4. Se cuentan
+      fotogramas dentro de la escena, fuera y al volver, con el evento ya
+      emitido.
+
+  De paso comprueba que el aviso solo se emite una vez.
+-->
+<script>
+window.__scrollLs = [];
+var _ael = EventTarget.prototype.addEventListener;
+EventTarget.prototype.addEventListener = function(t, f, o){
+  if(t === 'scroll'){
+    var quien = this === window ? 'window' : (this === document ? 'document' : (this.id ? '#'+this.id : this.nodeName));
+    window.__scrollLs.push({destino:quien, pasivo:(o && typeof o === 'object') ? !!o.passive : false});
+  }
+  return _ael.call(this, t, f, o);
+};
+window.__raf = 0;
+var _raf = window.requestAnimationFrame;
+window.requestAnimationFrame = function(cb){ window.__raf++; return _raf.call(window, cb); };
+</script>
+<!--CUERPO-->
+<script>
+(function(){
+var R = {};
+var espera = function(ms){ return new Promise(function(r){ setTimeout(r, ms); }); };
+function contar(ms){ var a = window.__raf; return espera(ms).then(function(){ return window.__raf - a; }); }
+
+(async function(){
+  for(var i=0;i<80 && document.body.classList.contains('boot');i++) await espera(100);
+  await espera(400);
+
+  R.listeners_scroll = window.__scrollLs;
+
+  var b = document.querySelector('[data-ck="si"]'); if(b) b.click();   // aceptar
+  await espera(300);
+
+  var sc = document.getElementById('scene'), st = document.getElementById('stage');
+  var rec = sc.offsetHeight - st.offsetHeight;
+
+  window.scrollTo(0, sc.offsetTop + rec*0.60);          // dentro: el bucle corre
+  await espera(400);
+  R.raf_en_escena = await contar(700);
+  R.registro_tras_mitad = (window.BO ? window.BO.registro.map(function(e){return e.nombre}) : null);
+  R.listeners_scroll_tras_mitad = window.__scrollLs.length;
+
+  window.scrollTo(0, document.documentElement.scrollHeight);   // fuera: parado
+  await espera(900);
+  R.raf_fuera_de_escena = await contar(1200);
+
+  window.scrollTo(0, sc.offsetTop + rec*0.60);          // vuelve: arranca otra vez
+  await espera(500);
+  R.raf_al_volver = await contar(700);
+  R.escena_mitad_una_vez = window.BO.registro.filter(function(e){return e.nombre==='escena_mitad'}).length;
+
+  await fetch('/resultado', {method:'POST', body:JSON.stringify(R)});
+  document.title = 'LISTO';
+})();
+})();
+</script>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Auditoria de medicion</title>
+<!--
+  Comprueba, contra el sitio real servido por tools/servidor-medicion.py, que:
+    · antes del consentimiento no se carga el script, no se escribe cookie y no
+      sale ninguna peticion (se verifica en el log de red del servidor, no en el
+      codigo);
+    · aceptar carga la herramienta y vacia la cola de eventos ya ocurridos;
+    · rechazar no carga nada, tira lo encolado y no vuelve a preguntar;
+    · los cinco eventos se registran, y la conversion se mide en gracias.html
+      distinguiendo la llegada desde el formulario de la entrada directa.
+
+  Uso:  python tools/servidor-medicion.py
+        http://127.0.0.1:8734/tools/auditar-medicion.html
+-->
+<style>body{background:#000;color:#0f0;font:12px monospace}iframe{width:1200px;height:900px;border:1px solid #030}</style>
+<div id="caja"></div>
+<pre id="out">corriendo…</pre>
+<script>
+const R = {};
+const espera = ms => new Promise(r => setTimeout(r, ms));
+const marca   = t => fetch('/marca?t=' + encodeURIComponent(t)).then(r => r.json());
+const traerLog = () => fetch('/log').then(r => r.json());
+const reset   = () => fetch('/reset').then(r => r.json());
+
+function cargar(url){
+  return new Promise(res => {
+    const f = document.createElement('iframe');
+    f.src = url;
+    f.onload = () => setTimeout(() => {
+      // evita que los clics de prueba naveguen el iframe; no impide que corran
+      // los listeners, que es justo lo que queremos observar
+      f.contentDocument.addEventListener('click', e => e.preventDefault(), true);
+      res(f);
+    }, 120);
+    caja.innerHTML = '';
+    caja.appendChild(f);
+  });
+}
+const hayBanner = f => !!f.contentDocument.getElementById('ck');
+const registro  = f => (f.contentWindow.BO ? f.contentWindow.BO.registro.map(e => e.nombre + (e.datos && e.datos.paso ? ':' + e.datos.paso : '') + (e.datos && e.datos.origen ? ':' + e.datos.origen : '')) : null);
+const analitica = f => !!f.contentWindow.__ANALITICA_CARGADA;
+
+async function esperarBanner(f, ms){
+  const t0 = Date.now();
+  while(Date.now() - t0 < ms){ if(hayBanner(f)) return Date.now() - t0; await espera(80); }
+  return -1;
+}
+
+// dispara los cinco eventos dentro del iframe
+async function disparar(f){
+  const d = f.contentDocument, w = f.contentWindow;
+  const inp = d.getElementById('f1'); if(inp) inp.focus();              // form_inicio
+  await espera(60);
+  const nxt = d.querySelector('[data-next]'); if(nxt) nxt.click();      // form_paso 1
+  await espera(60);
+  const sc = d.getElementById('scene'), st = d.getElementById('stage'); // escena_mitad
+  const rec = sc.offsetHeight - st.offsetHeight;
+  w.scrollTo(0, sc.offsetTop + rec * 0.6);
+  await espera(250);
+  const a = d.createElement('a');                                       // whatsapp_clic
+  a.href = 'https://wa.me/593999999999'; a.textContent = 'wa';
+  d.body.appendChild(a); a.click(); a.remove();
+  await espera(150);
+}
+
+const pidas = l => l.filter(e => e.ruta.indexOf('/analitica.js') === 0);
+
+(async function(){
+try{
+  // ── 1. sin decision: nada de analitica, y el aviso espera al preloader ────
+  localStorage.clear(); sessionStorage.clear();
+  await reset(); await marca('1-carga');
+  let f = await cargar('../index.html');
+  R['1a_banner_durante_preloader'] = hayBanner(f);          // debe ser false
+  const tardanza = await esperarBanner(f, 8000);
+  R['1b_banner_aparece_ms'] = tardanza;
+  await disparar(f);
+  R['1c_registro_antes_de_consentir'] = registro(f);        // debe ser []
+  R['1d_analitica_cargada'] = analitica(f);                 // false
+  R['1e_cookies'] = f.contentDocument.cookie;               // ''
+  R['1f_localStorage'] = Object.keys(localStorage);         // sin bo_consentimiento
+  R['1g_peticiones_analitica'] = pidas(await traerLog()).length;   // 0
+
+  // ── 2. aceptar: se carga, y se vacia la cola de lo ya ocurrido ────────────
+  await marca('2-aceptar');
+  f.contentDocument.querySelector('[data-ck="si"]').click();
+  await espera(900);
+  R['2a_banner_sigue'] = hayBanner(f);                      // false
+  R['2b_registro_tras_aceptar'] = registro(f);              // los 4 + consentimiento
+  R['2c_analitica_cargada'] = analitica(f);                 // true
+  R['2d_localStorage'] = localStorage.getItem('bo_consentimiento');
+  const log2 = await traerLog();
+  R['2e_peticiones_analitica'] = pidas(log2).length;        // 1
+  const tMarca = (log2.find(e => e.ruta === 'MARCA:2-aceptar') || {}).t;
+  R['2f_peticion_posterior_al_clic'] = pidas(log2).every(e => e.t >= tMarca);
+
+  // ── 3. segunda visita con aceptado: sin aviso, carga directa ──────────────
+  await reset(); await marca('3-recarga-aceptado');
+  f = await cargar('../index.html');
+  await espera(700);
+  R['3a_banner'] = hayBanner(f);                            // false
+  R['3b_analitica_cargada'] = analitica(f);                 // true
+  R['3c_peticiones_analitica'] = pidas(await traerLog()).length;  // 1
+
+  // ── 4. rechazar: nada, ni ahora ni luego ─────────────────────────────────
+  localStorage.clear(); sessionStorage.setItem('bo_seen', '1');
+  await reset(); await marca('4-rechazar');
+  f = await cargar('../index.html');
+  R['4a_banner_aparece_ms'] = await esperarBanner(f, 8000);
+  await disparar(f);
+  f.contentDocument.querySelector('[data-ck="no"]').click();
+  await espera(400);
+  await disparar(f);                                        // mas eventos despues
+  R['4b_registro'] = registro(f);                           // []
+  R['4c_analitica_cargada'] = analitica(f);                 // false
+  R['4d_localStorage'] = localStorage.getItem('bo_consentimiento');
+  R['4e_peticiones_analitica'] = pidas(await traerLog()).length;  // 0
+
+  // ── 5. segunda visita con rechazado: ni aviso ni reintento ───────────────
+  await reset(); await marca('5-recarga-rechazado');
+  f = await cargar('../index.html');
+  await espera(1200);
+  await disparar(f);
+  R['5a_banner'] = hayBanner(f);                            // false
+  R['5b_registro'] = registro(f);                           // []
+  R['5c_analitica_cargada'] = analitica(f);                 // false
+  R['5d_peticiones_analitica'] = pidas(await traerLog()).length;  // 0
+
+  // ── 6. conversion en gracias.html ────────────────────────────────────────
+  localStorage.setItem('bo_consentimiento', JSON.stringify({v:1, r:'si', t:'x'}));
+  sessionStorage.setItem('bo_lead', String(Date.now()));
+  await reset(); await marca('6-gracias');
+  f = await cargar('../gracias.html');
+  await espera(500);
+  R['6a_registro'] = registro(f);                           // conversion:formulario
+  R['6b_token_borrado'] = sessionStorage.getItem('bo_lead') === null;
+
+  // ── 7. entrada directa a gracias.html, sin pasar por el formulario ───────
+  f = await cargar('../gracias.html');
+  await espera(500);
+  R['7a_registro'] = registro(f);                           // conversion:directo
+
+  // ── 8. el aviso tambien aparece en las paginas secundarias ───────────────
+  localStorage.clear();
+  f = await cargar('../privacidad.html');
+  R['8a_banner_privacidad_ms'] = await esperarBanner(f, 4000);
+
+  R.ok = true;
+}catch(e){
+  R.error = String(e && e.stack || e);
+}
+out.textContent = JSON.stringify(R, null, 1);
+await fetch('/resultado', {method:'POST', body:JSON.stringify(R)});
+document.title = 'LISTO';
+})();
+</script>

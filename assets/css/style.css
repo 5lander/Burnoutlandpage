@@ -317,3 +317,25 @@ input:focus-visible{outline:2px solid var(--surge);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){
   .layer,.layer.on,.tag,.tag.on{transition-delay:0s}
 }
+
+/* ── P5 · Aviso de medicion ─────────────────────────────────────────────────
+   Fijo abajo y fuera del flujo: por construccion no puede desplazar nada, que
+   es la forma clasica de arruinar el CLS con un banner de cookies.
+
+   z-index 100: por encima del nav (60) y por debajo del preloader (120).
+   Aceptar y rechazar comparten clase, tamano y color. Un boton primario para
+   aceptar y uno apagado para rechazar seria empujar la decision. */
+.ck{position:fixed;left:0;right:0;bottom:0;z-index:100;
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;
+  padding:16px var(--marg);
+  background:rgba(16,16,24,.96);backdrop-filter:blur(14px);
+  border-top:1px solid rgba(255,255,255,.10)}
+.ck-t{flex:1 1 320px;margin:0;font-size:13px;line-height:1.6;color:var(--ash)}
+.ck-t a{color:var(--surge);text-decoration:underline;text-underline-offset:3px}
+.ck-b{display:flex;gap:10px;flex-shrink:0}
+.ck .btn{padding:10px 22px;font-size:13px}
+@media(max-width:560px){
+  .ck{padding-block:14px}
+  .ck-b{width:100%}
+  .ck .btn{flex:1;justify-content:center}
+}

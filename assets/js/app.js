@@ -52,6 +52,10 @@ var MIN_SEGUNDOS = 3;
 // Corte de la peticion si el servidor no responde.
 var TIMEOUT_MS = 15000;
 
+// Medicion. Envoltorio seguro: si medicion.js no esta o el consentimiento no
+// se ha dado, la llamada no hace nada. app.js no depende de ese archivo.
+function medir(n, d){ if(window.BO && window.BO.medir) window.BO.medir(n, d); }
+
 var T0 = Date.now();
 var hayEndpoint = /^https?:\/\//i.test(ENDPOINT);
 var hayWhatsapp = /^\d{8,15}$/.test(WHATSAPP);
@@ -67,7 +71,10 @@ function foco(n){
   var c = p.querySelector('input:not([tabindex="-1"]), button, a, select, textarea');
   if(c) c.focus();
 }
-document.querySelectorAll('[data-next]').forEach(function(b){b.onclick=function(){show(step+1);foco(step)}});
+document.querySelectorAll('[data-next]').forEach(function(b){b.onclick=function(){
+  var hecho=step+1;                                    // numero del paso que se deja atras
+  show(step+1); foco(step); medir('form_paso',{paso:hecho});
+}});
 document.querySelectorAll('[data-prev]').forEach(function(b){b.onclick=function(){show(step-1);foco(step)}});
 document.querySelectorAll('.chip').forEach(function(c){c.onclick=function(){
   document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('sel');x.setAttribute('aria-pressed','false')});
@@ -238,6 +245,10 @@ document.querySelector('[data-send]').onclick=function(){
   }).then(function(res){
     clearTimeout(corte);
     if(!res.ok) throw {tipo:'http', codigo:res.status};
+    // Marca de paso por el formulario. gracias.html la lee para distinguir la
+    // conversion real de quien entra directo a esa URL, y la borra al leerla.
+    try{ sessionStorage.setItem('bo_lead', String(Date.now())); }catch(e){}
+    medir('envio_exitoso', {reto:challenge});
     location.href='gracias.html';
   })['catch'](function(err){
     clearTimeout(corte);

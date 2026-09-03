@@ -88,15 +88,29 @@ var pbar = document.getElementById('pbar'), phase = document.getElementById('pha
     head = document.getElementById('head'), hint = document.querySelector('.hint');
 var PH = ['01 · EL PROBLEMA','02 · EL GIRO','03 · LO QUE HACEMOS','04 · BURNOUT'];
 var prog = 0, target = 0;
+// P5 · una sola vez: aviso de que se ha pasado la mitad del recorrido
+var mitadAvisada = false;
 // estado del bucle: se define aqui porque frame() lo consulta (ver mas abajo)
 var corriendo = false, enPantalla = true, visible = true;
 
 function scroll(){
   var r = scene.getBoundingClientRect();
-  var t = -r.top / (scene.offsetHeight - stage.offsetHeight);
+  var recorrido = scene.offsetHeight - stage.offsetHeight;
+  var t = -r.top / recorrido;
   target = Math.max(0, Math.min(1, t));
 
   if(hint) hint.style.opacity = target > .04 ? 0 : '';
+
+  // P5 · medicion. Va aqui dentro a proposito: reusa el unico listener de
+  // scroll que ya existe (pasivo) en vez de anadir otro, y no toca ni prog ni
+  // el bucle de rAF, que siguen gobernados por revisar(). Emite y se apaga.
+  //
+  // recorrido > 1 descarta el caso de movimiento reducido, donde la escena mide
+  // una pantalla justa, no hay recorrido que medir y la division daria infinito.
+  if(!mitadAvisada && recorrido > 1 && target >= .5){
+    mitadAvisada = true;
+    try{ dispatchEvent(new CustomEvent('bo:escena-mitad')); }catch(e){}
+  }
 }
 addEventListener('scroll', scroll, {passive:true});
 addEventListener('resize', function(){resize(); scroll();});
