@@ -22,10 +22,10 @@ en el repositorio es exactamente lo que se sirve.
 >   funciona y los eventos se registran en memoria, pero no se carga ninguna
 >   herramienta y no sale ninguna petición.
 > - **El portafolio son tres rectángulos de color.** No hay reels reales.
-> - **El teléfono del pie es de relleno**, y se ve en las tres páginas.
 >
-> Por eso `robots.txt` bloquea la indexación. La lista completa está en
-> [Marcadores pendientes](#marcadores-pendientes) y en
+> Por eso la indexación está bloqueada: ver
+> [Bloqueo de indexación](#bloqueo-de-indexación). La lista completa de lo que
+> falta está en [Marcadores pendientes](#marcadores-pendientes) y en
 > [Antes de publicar](#antes-de-publicar).
 
 ---
@@ -35,6 +35,7 @@ en el repositorio es exactamente lo que se sirve.
 - [Cómo levantarlo en local](#cómo-levantarlo-en-local)
 - [Estructura](#estructura)
 - [Despliegue](#despliegue)
+- [Bloqueo de indexación](#bloqueo-de-indexación)
 - [`tools/` en producción](#tools-en-producción)
 - [Qué revisar tras el primer push](#qué-revisar-tras-el-primer-push)
 - [Marcadores pendientes](#marcadores-pendientes)
@@ -114,6 +115,32 @@ clona la rama y copia los archivos tal cual.
 
 Si `public_html` ya tiene archivos, Hostinger se niega a clonar encima. Hay que
 vaciarlo antes (guarda copia de lo que hubiera).
+
+## Bloqueo de indexación
+
+Hoy hay dos cerrojos puestos, y se quitan los dos a la vez para publicar
+(punto 1 de [Antes de publicar](#antes-de-publicar)):
+
+| Dónde | Qué hace |
+|---|---|
+| `robots.txt` → `Disallow: /` | Impide **rastrear**. Ningún buscador descarga la página. |
+| `index.html` → `<meta name="robots" content="noindex, nofollow">` | Impide **indexar**. Le dice al buscador que no la incluya aunque la haya leído. |
+
+**Los dos juntos no suman: se estorban.** Un buscador solo lee el `meta
+noindex` si puede rastrear la página, y el `Disallow` se lo impide. Mientras
+convivan, el `meta` no llega a leerse, y sigue siendo posible que Google liste
+la URL a secas —sin título ni descripción— si alguien enlaza el dominio. Que es
+exactamente lo que se quería evitar.
+
+**Si lo que importa es la garantía de no aparecer**, la combinación correcta es
+la contraria: dejar `robots.txt` en `Allow: /` y quedarse solo con el `meta
+noindex`. El buscador entra, lee que no debe indexar y obedece; no hay listado
+de URL a secas posible. La contrapartida es que sí descarga la página.
+
+Se han dejado los dos porque el `Disallow` es la única defensa frente a
+rastreadores que ignoran el `meta`, y el `meta` es la única frente a los que
+ignoran `robots.txt`. Pero **conviene decidirlo a conciencia**, no dejarlo así
+por inercia.
 
 ## `tools/` en producción
 
@@ -313,7 +340,6 @@ propósito: es imposible publicarlos por descuido sin verlos.
 
 | Qué | Dónde |
 |---|---|
-| Teléfono `+593 99 000 0000` en el pie | [`index.html:306`](index.html#L306), [`gracias.html:60`](gracias.html#L60), [`privacidad.html:101`](privacidad.html#L101) |
 | Tres reels del portafolio: rectángulos de color | [`index.html:223`](index.html#L223) y siguientes |
 | Dirección postal de la agencia | No está en el sitio. Ver [Datos estructurados](#datos-estructurados). |
 
@@ -321,16 +347,25 @@ propósito: es imposible publicarlos por descuido sin verlos.
 
 En orden. Los cinco primeros son bloqueantes.
 
-1. **Quitar el bloqueo de indexación.** En [`robots.txt`](robots.txt), cambiar
-   `Disallow: /` por `Allow: /`. Mientras esté puesto, el sitio es invisible en
-   los buscadores.
+1. **Quitar el bloqueo de indexación. Son DOS cambios, no uno**, y olvidar el
+   segundo deja el sitio invisible sin que se note:
+   1. En [`robots.txt`](robots.txt), cambiar `Disallow: /` por `Allow: /`.
+   2. En [`index.html`](index.html), quitar
+      `<meta name="robots" content="noindex, nofollow">` (y el comentario de
+      encima). Está justo antes del `canonical`.
+
+   Las otras dos páginas llevan `noindex, follow` a propósito y **se quedan
+   como están**: `gracias.html` y `privacidad.html` no deben salir en
+   buscadores ni antes ni después de publicar.
 2. **Conectar el `ENDPOINT`** y probar un envío real de punta a punta, hasta ver
    el lead en n8n y aterrizar en `gracias.html`. El webhook tiene que responder
    con `Access-Control-Allow-Origin: https://burnout.ec` o el navegador
    bloqueará la petición.
 3. **Poner los textos legales.** Los tres marcadores visibles y los ocho
    apartados de la política.
-4. **Poner el teléfono real** en el pie de las tres páginas, o quitar la línea.
+4. **Poner el teléfono** en el pie de las tres páginas, si va a haberlo. Hoy
+   no hay línea de teléfono: se quitó el número de relleno, porque publicar un
+   número inventado es peor que publicar una línea de menos.
 5. **Sustituir los tres reels** por piezas reales.
 6. Poner el `MEDICION_ID` y volver a pasar
    `tools/auditar-medicion.html` para confirmar que sigue sin cargar nada antes

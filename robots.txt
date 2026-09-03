@@ -6,8 +6,16 @@
 # indexe eso deja en el buscador una politica de privacidad que dice
 # "Pendiente de abogado" y un formulario roto, y quitarlo despues es lento.
 #
-# PARA PUBLICAR: cambiar la linea "Disallow: /" por "Allow: /" y volver a
-# subir. Es el punto 1 de la lista previa al lanzamiento del README.
+# PARA PUBLICAR hay que tocar DOS sitios, no uno:
+#   1. aqui, cambiar "Disallow: /" por "Allow: /"
+#   2. quitar <meta name="robots" content="noindex, nofollow"> de index.html
+# Olvidar el segundo deja el sitio invisible sin que se note. Es el punto 1 de
+# la lista previa al lanzamiento del README.
+#
+# OJO A LA INTERACCION: un buscador solo lee el meta noindex si puede rastrear
+# la pagina, y este Disallow se lo impide. Mientras las dos cosas convivan, el
+# meta no llega a leerse y sigue siendo posible que Google liste la URL a secas
+# si alguien enlaza el dominio. Ver el README, "Bloqueo de indexacion".
 # ─────────────────────────────────────────────────────────────────────────────
 
 User-agent: *
