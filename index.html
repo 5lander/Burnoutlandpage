@@ -231,7 +231,21 @@
     <div class="reel">
       <article class="tile reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
         <div class="meta"><div class="mono">DOCUMENTAL · A'I COFÁN</div><h4>DURENO 1</h4></div></article>
-      <article class="tile b reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
+      <article class="tile b v reveal">
+        <!-- El reel ocupa el sitio del degradado y hereda su clase, asi que el zoom
+             al pasar el raton y el recorte de la tarjeta siguen siendo los mismos.
+             Es decorativo: sin sonido, fuera del orden de tabulacion y oculto para
+             lectores de pantalla, porque el titulo de la tarjeta ya dice que es.
+             El poster va en data-poster y no en poster: el atributo real se
+             descargaria con la pagina aunque la tarjeta este a tres pantallas de
+             distancia. app.js lo pone al acercarse. Hasta entonces se ve el
+             degradado de .tile.b, que es lo que habia antes. -->
+        <video class="bgw" data-poster="assets/video/oktoberfest-loja.jpg" muted loop playsinline
+               preload="none" aria-hidden="true" tabindex="-1">
+          <source src="assets/video/oktoberfest-loja.webm" type="video/webm">
+          <source src="assets/video/oktoberfest-loja.mp4" type="video/mp4">
+        </video>
+        <div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
         <div class="meta"><div class="mono">CAMPAÑA · EXPECTATIVA</div><h4>Oktoberfest Loja</h4></div></article>
       <article class="tile c reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
         <div class="meta"><div class="mono">TERRITORIO · RECORRIDO</div><h4>La vuelta a Zamora</h4></div></article>

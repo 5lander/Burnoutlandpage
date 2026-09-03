@@ -31,6 +31,37 @@ document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
 var pio = new IntersectionObserver(function(es){es.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('on')},i*140);pio.unobserve(e.target)}})},{threshold:.4});
 document.querySelectorAll('#pipe .step').forEach(function(el){pio.observe(el)});
 
+// ── reel del portafolio ─────────────────────────────────────────────────────
+// El video no se descarga hasta que su tarjeta se acerca a pantalla, se para al
+// salir y no llega a pedirse siquiera con movimiento reducido: ahi se queda el
+// poster. Mismo criterio que el bucle del canvas en P4, y por lo mismo: no
+// gastar bateria ni datos en algo que nadie esta mirando.
+(function(){
+  var v = document.querySelector('.tile video');
+  if(!v) return;
+  v.muted = true;                    // Safari mira la propiedad, no solo el atributo
+
+  function poster(){
+    if(v.poster || !v.dataset.poster) return;
+    v.poster = v.dataset.poster;
+  }
+  // Sin IntersectionObserver no hay forma de saber cuando acercarse: se deja el
+  // poster puesto y ya. Con movimiento reducido, tambien: poster y nada mas.
+  if(typeof IntersectionObserver !== 'function' || reduce){ poster(); return; }
+
+  new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting){ v.pause(); return; }
+      poster();
+      if(v.preload === 'none'){ v.preload = 'auto'; v.load(); }
+      // play() devuelve una promesa que el navegador puede rechazar (ahorro de
+      // datos, pestana en segundo plano). Si la rechaza, se queda el poster.
+      var pr = v.play();
+      if(pr && pr['catch']) pr['catch'](function(){});
+    });
+  }, {rootMargin:'200px 0px'}).observe(v);
+})();
+
 // ── formulario ──────────────────────────────────────────────────────────────
 
 // MARCADOR · PENDIENTE. URL del webhook de n8n que recibe el lead.

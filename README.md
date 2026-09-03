@@ -21,7 +21,8 @@ en el repositorio es exactamente lo que se sirve.
 > - **No hay medición.** `MEDICION_ID` sigue en marcador: el aviso de cookies
 >   funciona y los eventos se registran en memoria, pero no se carga ninguna
 >   herramienta y no sale ninguna petición.
-> - **El portafolio son tres rectángulos de color.** No hay reels reales.
+> - **Dos de los tres reels del portafolio siguen siendo rectángulos de
+>   color.** Solo *Oktoberfest Loja* es una pieza real.
 >
 > Por eso la indexación está bloqueada: ver
 > [Bloqueo de indexación](#bloqueo-de-indexación). La lista completa de lo que
@@ -40,6 +41,7 @@ en el repositorio es exactamente lo que se sirve.
 - [Qué revisar tras el primer push](#qué-revisar-tras-el-primer-push)
 - [Marcadores pendientes](#marcadores-pendientes)
 - [Antes de publicar](#antes-de-publicar)
+- [El reel del portafolio](#el-reel-del-portafolio)
 - [Datos estructurados](#datos-estructurados)
 - [Reglas del proyecto](#reglas-del-proyecto)
 
@@ -89,6 +91,7 @@ El detalle de cada herramienta está en [`tools/LEEME.md`](tools/LEEME.md).
 | `assets/js/medicion.js` | Consentimiento, aviso de cookies y los seis eventos. Nada se carga antes de aceptar. |
 | `assets/fonts/` | Poppins 300/400/500/700 y JetBrains Mono 400/500, subconjuntos latin y latin-ext. 10 archivos, 112 KB en disco, ~62 KB por visita. |
 | `assets/img/og.jpg` | Imagen de compartición, 1200×630, 28 KB. Generada por código desde el path del isotipo. |
+| `assets/video/` | El reel de *Oktoberfest Loja*, en WebM y MP4, más su fotograma de portada. Ver [El reel del portafolio](#el-reel-del-portafolio). |
 | `assets/img/favicon.svg` · `assets/img/icono-512.png` | Iconos, derivados del mismo path. |
 | `favicon.ico` · `apple-touch-icon.png` | En la raíz porque los navegadores los piden ahí. |
 | `.htaccess` | HTTPS forzado, dominio sin www, caché, compresión, sin listados y `tools/` denegado. |
@@ -340,7 +343,8 @@ propósito: es imposible publicarlos por descuido sin verlos.
 
 | Qué | Dónde |
 |---|---|
-| Tres reels del portafolio: rectángulos de color | [`index.html:223`](index.html#L223) y siguientes |
+| Dos reels del portafolio siguen siendo rectángulos de color: *Dureno 1* y *La vuelta a Zamora* | [`index.html:232`](index.html#L232) y [`index.html:250`](index.html#L250) |
+| El texto de la sección sigue diciendo «Reemplazar por reels reales» | [`index.html:230`](index.html#L230) |
 | Dirección postal de la agencia | No está en el sitio. Ver [Datos estructurados](#datos-estructurados). |
 
 ## Antes de publicar
@@ -366,7 +370,8 @@ En orden. Los cinco primeros son bloqueantes.
 4. **Poner el teléfono** en el pie de las tres páginas, si va a haberlo. Hoy
    no hay línea de teléfono: se quitó el número de relleno, porque publicar un
    número inventado es peor que publicar una línea de menos.
-5. **Sustituir los tres reels** por piezas reales.
+5. **Sustituir los dos reels que faltan** por piezas reales, y revisar entonces
+   el texto de la sección, que sigue diciendo «Reemplazar por reels reales».
 6. Poner el `MEDICION_ID` y volver a pasar
    `tools/auditar-medicion.html` para confirmar que sigue sin cargar nada antes
    de aceptar.
@@ -376,6 +381,54 @@ En orden. Los cinco primeros son bloqueantes.
    La tarjeta se comprobó simulando el rastreador, nunca contra WhatsApp de
    verdad.
 9. Repasar el anillo de foco en Chrome y Firefox.
+
+## El reel del portafolio
+
+La tarjeta *Oktoberfest Loja* lleva un `<video>` con la clase `.bgw`, la misma
+que el degradado al que sustituye, así que hereda posición, recorte y el zoom al
+pasar el ratón sin tocar ninguna regla de las que ya había. Es decorativo: sin
+sonido, `aria-hidden`, fuera del orden de tabulación.
+
+**No cuesta nada hasta que hace falta.** Ni el vídeo ni el fotograma de portada
+se piden al cargar la página: `app.js` los pone cuando la tarjeta se acerca a
+pantalla, y pausa al salir. Con `prefers-reduced-motion` no se pide el vídeo en
+ningún momento: se queda la portada quieta. La carga inicial de la portada sigue
+siendo la misma que antes del reel, unos 128 KB.
+
+La tarjeta lleva además la clase `.v`, que activa dos cosas que solo tienen
+sentido sobre imagen y que **no afectan a las otras dos tarjetas**: un velo
+inferior para que el título no caiga sobre la camiseta blanca del plano, y un
+fondo bajo el círculo de *play*, que sin él desaparece contra el cielo.
+
+### Añadir los otros dos reels
+
+Los másteres **no se versionan** (ver `.gitignore`): al repositorio van solo las
+codificaciones para web. El máster de este pesaba 22 MB en HEVC, que Chrome y
+Firefox no reproducen, así que hay que recodificar siempre. Los comandos, con el
+recorte a 4:5 que pide la tarjeta:
+
+```bash
+# recorte centrado de 16:9 a 4:5 + escalado a 720x900 + 25 fps, sin audio
+C="crop=970:1214:595:0,scale=720:900:flags=lanczos,fps=25"
+
+ffmpeg -i MASTER.MP4 -an -vf "$C" -c:v libx264 -profile:v high -pix_fmt yuv420p   -crf 30 -preset slow -g 50 -movflags +faststart assets/video/NOMBRE.mp4
+
+ffmpeg -i MASTER.MP4 -an -vf "$C" -c:v libvpx-vp9 -crf 42 -b:v 0   -deadline good -cpu-used 2 -row-mt 1 -g 75 assets/video/NOMBRE.webm
+
+# fotograma de portada, del segundo que mejor represente la pieza
+ffmpeg -ss 15.5 -i MASTER.MP4 -frames:v 1   -vf "crop=970:1214:595:0,scale=720:900:flags=lanczos" -q:v 5 assets/video/NOMBRE.jpg
+```
+
+Los valores de `crop` dependen del máster: son `ancho=alto*4/5`, `x` centrado.
+Para uno de 2160×1214 salen `970:1214:595:0`. Comprobado a tamaño real de la
+tarjeta (411 px), bajar de estos ajustes no se distingue y subir solo engorda:
+el resultado son ~1,3 MB en WebM y ~1,4 MB en MP4, de los que cada navegador se
+descarga uno solo.
+
+Después, en `index.html`, cambiar el `<div class="bgw"></div>` de la tarjeta por
+el bloque `<video>` de la de Oktoberfest, añadir `v` a las clases del
+`<article>`, y en `app.js` cambiar `querySelector` por `querySelectorAll` en el
+bloque del reel. Y pasar `tools/auditar-reel.html`.
 
 ## Datos estructurados
 

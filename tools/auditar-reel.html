@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Auditoria del reel</title>
+<!--
+  Comprueba que el video de la tarjeta del portafolio no cuesta nada hasta que
+  hace falta:
+
+    · al cargar la pagina no se pide ni el video ni el poster, aunque la tarjeta
+      esté a varias pantallas de distancia;
+    · al acercarse a la tarjeta se piden el poster y UNA sola de las dos
+      codificaciones, la que el navegador elija;
+    · al salir de pantalla el video se pausa;
+    · con movimiento reducido no se pide el video en ningun momento: solo el
+      poster, y no se reproduce nada.
+
+  Uso:  python tools/servidor-pruebas.py
+        http://127.0.0.1:8733/tools/auditar-reel.html
+-->
+<style>body{background:#000;color:#0f0;font:12px monospace}iframe{width:1100px;height:800px;border:1px solid #030}</style>
+<div id="caja"></div>
+<pre id="out">corriendo…</pre>
+<script>
+const R = {};
+const espera = ms => new Promise(r => setTimeout(r, ms));
+
+function cargar(url, reducido){
+  return new Promise(res => {
+    const f = document.createElement('iframe');
+    f.src = url;
+    f.onload = () => setTimeout(() => res(f), 150);
+    caja.innerHTML = '';
+    caja.appendChild(f);
+    if(reducido) f.contentWindow && 0;   // el flag real va por linea de comandos
+  });
+}
+
+// nombres de los recursos del reel que ha pedido el iframe
+const pedidos = f => f.contentWindow.performance.getEntriesByType('resource')
+  .map(e => e.name.split('/').pop())
+  .filter(n => n.indexOf('oktoberfest') === 0);
+
+async function esperarFin(f){
+  for(let i = 0; i < 60 && f.contentDocument.body.classList.contains('boot'); i++) await espera(100);
+  await espera(400);
+}
+
+(async function(){
+try{
+  const f = await cargar('../index.html');
+  await esperarFin(f);
+  const d = f.contentDocument, w = f.contentWindow;
+  const v = d.querySelector('.tile video');
+
+  R['1_video_en_el_dom']        = !!v;
+  R['2_pedidos_al_cargar']      = pedidos(f);                 // debe ser []
+  R['3_preload']                = v.preload;                  // 'none'
+  R['4_poster_al_cargar']       = v.getAttribute('poster');    // null
+  R['5_oculto_para_lectores']   = v.getAttribute('aria-hidden') === 'true' && v.tabIndex === -1;
+  R['6_sin_audio']              = v.muted === true;
+
+  // acercarse a la tarjeta
+  const tile = d.querySelector('.tile.v');
+  w.scrollTo(0, tile.getBoundingClientRect().top + w.scrollY - 300);
+  await espera(2500);
+  R['7_pedidos_al_acercarse']   = pedidos(f);                 // poster + una codificacion
+  R['8_reproduciendo']          = !v.paused;
+  R['9_tiempo_avanza']          = await (async () => {
+    const t = v.currentTime; await espera(700); return v.currentTime > t;
+  })();
+
+  // salir de pantalla
+  w.scrollTo(0, 0);
+  await espera(1200);
+  R['10_pausado_fuera_de_pantalla'] = v.paused;
+
+  R.ok = true;
+}catch(e){ R.error = String(e && e.stack || e); }
+
+out.textContent = JSON.stringify(R, null, 1);
+try{ await fetch('/resultado-reel', {method:'POST', body:JSON.stringify(R)}); }catch(e){}
+document.title = 'LISTO';
+})();
+</script>

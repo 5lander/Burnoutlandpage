@@ -7,3 +7,8 @@ node_modules/
 # Salida de las herramientas de tools/, no forma parte del sitio
 tools/resultado-*.json
 tools/recibido.json
+
+# Los masters de video no se versionan: al repositorio solo van las
+# codificaciones para web de assets/video/.
+/IMG_*.MP4
+/IMG_*.mp4

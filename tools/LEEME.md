@@ -21,6 +21,7 @@ el acceso a este directorio en producción.
 | `servidor-medicion.py` | Sirve el sitio real parcheando al vuelo las constantes marcadas de `medicion.js`, anota todas las peticiones y sabe inyectar fragmentos con `?frag=`. |
 | `auditar-medicion.html` | Comprueba el consentimiento entero: nada antes de aceptar, aceptar carga y vacía la cola, rechazar no carga ni reintenta, y los cinco eventos. |
 | `auditar-medicion-raf.html` | Fragmento: censa los listeners de scroll y cuenta fotogramas, para verificar que el evento de la mitad de la escena no despierta el bucle. |
+| `auditar-reel.html` | Comprueba que el vídeo del portafolio no se pide hasta acercarse a su tarjeta, que solo se descarga una de las dos codificaciones y que se pausa al salir de pantalla. |
 
 Los archivos marcados como **fragmento** no se abren solos: se inyectan antes de
 `</body>` de una copia de `index.html`. Por ejemplo:
