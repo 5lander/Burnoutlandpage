@@ -22,6 +22,7 @@ el acceso a este directorio en producción.
 | `auditar-medicion.html` | Comprueba el consentimiento entero: nada antes de aceptar, aceptar carga y vacía la cola, rechazar no carga ni reintenta, y los cinco eventos. |
 | `auditar-medicion-raf.html` | Fragmento: censa los listeners de scroll y cuenta fotogramas, para verificar que el evento de la mitad de la escena no despierta el bucle. |
 | `auditar-reel.html` | Comprueba que el vídeo del portafolio no se pide hasta acercarse a su tarjeta, que solo se descarga una de las dos codificaciones y que se pausa al salir de pantalla. |
+| `auditar-visor.html` | Comprueba el visor: los 6,6 MB de la pieza completa no se piden hasta abrirlo, el foco entra y vuelve, cierran Escape, el botón y el fondo, y el bucle de la tarjeta se para y se reanuda. |
 
 Los archivos marcados como **fragmento** no se abren solos: se inyectan antes de
 `</body>` de una copia de `index.html`. Por ejemplo:

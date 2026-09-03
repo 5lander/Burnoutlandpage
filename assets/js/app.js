@@ -31,6 +31,12 @@ document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
 var pio = new IntersectionObserver(function(es){es.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('on')},i*140);pio.unobserve(e.target)}})},{threshold:.4});
 document.querySelectorAll('#pipe .step').forEach(function(el){pio.observe(el)});
 
+// Compartido entre el bucle de la tarjeta y el visor: mientras el visor esta
+// abierto el bucle mudo no debe arrancar. Bloquear el desplazamiento del fondo
+// mueve la maquetacion lo justo para que el IntersectionObserver vuelva a
+// dispararse, y sin esta bandera el bucle se reanudaba por detras del visor.
+var visorAbierto = false;
+
 // ── reel del portafolio ─────────────────────────────────────────────────────
 // El video no se descarga hasta que su tarjeta se acerca a pantalla, se para al
 // salir y no llega a pedirse siquiera con movimiento reducido: ahi se queda el
@@ -53,6 +59,7 @@ document.querySelectorAll('#pipe .step').forEach(function(el){pio.observe(el)});
     es.forEach(function(e){
       if(!e.isIntersecting){ v.pause(); return; }
       poster();
+      if(visorAbierto) return;
       if(v.preload === 'none'){ v.preload = 'auto'; v.load(); }
       // play() devuelve una promesa que el navegador puede rechazar (ahorro de
       // datos, pestana en segundo plano). Si la rechaza, se queda el poster.
@@ -60,6 +67,73 @@ document.querySelectorAll('#pipe .step').forEach(function(el){pio.observe(el)});
       if(pr && pr['catch']) pr['catch'](function(){});
     });
   }, {rootMargin:'200px 0px'}).observe(v);
+})();
+
+// ── visor del reel ──────────────────────────────────────────────────────────
+// Abre la pieza completa, tal y como se grabo: 1920x1080, con sonido y sin el
+// recorte 4:5 de la tarjeta. Se apoya en <dialog> nativo, que ya trae el
+// atrapado de foco, la tecla Escape, la inertizacion del resto de la pagina y
+// la devolucion del foco al cerrar.
+//
+// No sabe nada de ninguna pieza en concreto: coge el archivo, la portada y el
+// rotulo de la tarjeta desde la que se abre, asi que vale para las tres.
+(function(){
+  var visor = document.getElementById('visor'), vv = document.getElementById('visor-v');
+  if(!visor || !vv || typeof visor.showModal !== 'function') return;
+  var meta = visor.querySelector('.visor-meta');
+  var bucle = null;                                  // el bucle de la tarjeta abierta
+
+  function abrir(tarjeta){
+    var src = tarjeta.dataset.full;
+    if(!src) return;
+    // Solo se descarga al abrir, y no se vuelve a pedir si ya es la misma pieza.
+    if(vv.getAttribute('src') !== src){
+      vv.poster = tarjeta.dataset.fullPoster || '';
+      vv.src = src;
+    }
+    var mono = tarjeta.querySelector('.mono'), tit = tarjeta.querySelector('h4');
+    meta.innerHTML = '';
+    if(mono){ var sp = document.createElement('span'); sp.textContent = mono.textContent; meta.appendChild(sp); }
+    if(tit){ meta.appendChild(document.createTextNode(tit.textContent)); }
+    visor.setAttribute('aria-label', 'Reel: ' + (tit ? tit.textContent : ''));
+
+    visorAbierto = true;
+    bucle = tarjeta.querySelector('video');
+    if(bucle) bucle.pause();                         // el bucle mudo estorba al sonido
+    // Compensa el ancho de la barra de desplazamiento que se va al bloquear el
+    // fondo; sin esto la pagina da un salto lateral al abrir y al cerrar.
+    var hueco = window.innerWidth - document.documentElement.clientWidth;
+    if(hueco > 0) document.body.style.paddingRight = hueco + 'px';
+    document.body.classList.add('visor-abierto');
+    visor.showModal();
+    var pr = vv.play();
+    if(pr && pr['catch']) pr['catch'](function(){});
+  }
+
+  // Se dispara con el <dialog>, venga el cierre de donde venga: del boton, de
+  // Escape o del clic en el fondo.
+  visor.addEventListener('close', function(){
+    visorAbierto = false;
+    vv.pause(); vv.currentTime = 0;
+    document.body.classList.remove('visor-abierto');
+    document.body.style.paddingRight = '';
+    if(bucle && !reduce){
+      var pr = bucle.play();
+      if(pr && pr['catch']) pr['catch'](function(){});
+    }
+  });
+
+  // Clic en el fondo: en un dialogo modal el evento llega con target en el
+  // propio <dialog>, porque el contenido esta dentro de .visor-caja.
+  visor.addEventListener('click', function(e){ if(e.target === visor) visor.close(); });
+  visor.querySelector('[data-cerrar]').onclick = function(){ visor.close(); };
+
+  // El boton de play es el camino con teclado; la tarjeta entera, el del raton.
+  document.querySelectorAll('.tile[data-full]').forEach(function(t){
+    t.onclick = function(){ abrir(t); };
+    var b = t.querySelector('[data-visor]');
+    if(b) b.onclick = function(e){ e.stopPropagation(); abrir(t); };
+  });
 })();
 
 // ── formulario ──────────────────────────────────────────────────────────────

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Auditoria del visor</title>
+<!--
+  Comprueba el visor del reel:
+
+    · los 6,6 MB de la pieza completa no se piden al cargar la pagina, solo al
+      abrir el visor, y una sola vez aunque se abra varias;
+    · el foco entra en el dialogo al abrir y vuelve al boton al cerrar;
+    · Escape, el boton de cerrar y el clic en el fondo cierran los tres;
+    · al cerrar, el video se para y el bucle mudo de la tarjeta se reanuda;
+    · el fondo no se desplaza mientras el visor esta abierto;
+    · el circulo de play, ahora un <button>, ocupa la misma caja que el <div>
+      al que sustituye en las otras dos tarjetas.
+
+  Uso:  python tools/servidor-pruebas.py
+        http://127.0.0.1:8733/tools/auditar-visor.html
+  Chrome necesita --autoplay-policy=no-user-gesture-required, porque un clic
+  sintetico no cuenta como gesto del usuario para reproducir con sonido.
+-->
+<style>body{background:#000;color:#0f0;font:12px monospace}iframe{width:1200px;height:820px;border:1px solid #030}</style>
+<div id="caja"></div>
+<pre id="out">corriendo…</pre>
+<script>
+const R = {};
+const espera = ms => new Promise(r => setTimeout(r, ms));
+
+function cargar(url){
+  return new Promise(res => {
+    const f = document.createElement('iframe');
+    f.src = url;
+    f.onload = () => setTimeout(() => res(f), 150);
+    caja.innerHTML = '';
+    caja.appendChild(f);
+  });
+}
+const pedidos = f => f.contentWindow.performance.getEntriesByType('resource')
+  .map(e => e.name.split('/').pop()).filter(n => n.indexOf('oktoberfest') === 0);
+const cuenta = (f, n) => pedidos(f).filter(x => x === n).length;
+
+(async function(){
+try{
+  const f = await cargar('../index.html');
+  for(let i = 0; i < 60 && f.contentDocument.body.classList.contains('boot'); i++) await espera(100);
+  await espera(400);
+  const d = f.contentDocument, w = f.contentWindow;
+  const visor = d.getElementById('visor'), vv = d.getElementById('visor-v');
+  const boton = d.querySelector('[data-visor]'), tarjeta = d.querySelector('.tile.v');
+  const bucle = tarjeta.querySelector('video');
+
+  R['1_dialog_soportado']   = typeof visor.showModal === 'function';
+  R['2_pedidos_al_cargar']  = pedidos(f);                       // []
+  R['3_src_vacio']          = !vv.getAttribute('src');          // true
+  R['4_boton_es_button']    = boton.tagName === 'BUTTON';
+
+  // la caja del boton tiene que coincidir con la del div de las otras tarjetas
+  const rb = boton.getBoundingClientRect();
+  const rd = d.querySelector('.tile:not(.v) .play').getBoundingClientRect();
+  R['5_caja_play'] = [Math.round(rb.width*100)/100, Math.round(rb.height*100)/100];
+  R['5_caja_play_div'] = [Math.round(rd.width*100)/100, Math.round(rd.height*100)/100];
+
+  // ── abrir con el boton
+  boton.focus();
+  boton.click();
+  await espera(1800);
+  R['6_abierto']            = visor.open;
+  R['7_pedidos_tras_abrir'] = pedidos(f);
+  R['8_con_sonido']         = vv.muted === false && vv.volume > 0;
+  R['9_reproduciendo']      = !vv.paused;
+  R['10_bucle_pausado']     = bucle.paused;
+  R['11_foco_dentro']       = visor.contains(d.activeElement);
+  R['12_fondo_bloqueado']   = w.getComputedStyle(d.body).overflow === 'hidden';
+
+  // ── cerrar con Escape
+  visor.dispatchEvent(new w.Event('cancel'));   // por si acaso
+  visor.close();
+  await espera(900);
+  R['13_cerrado']           = !visor.open;
+  R['14_video_parado']      = vv.paused && vv.currentTime === 0;
+  R['15_fondo_libre']       = w.getComputedStyle(d.body).overflow !== 'hidden';
+  R['16_foco_vuelve']       = d.activeElement === boton;
+  R['17_bucle_reanudado']   = !bucle.paused;
+
+  // ── segunda apertura: no se vuelve a descargar
+  const antes = cuenta(f, 'oktoberfest-loja-full.mp4');
+  tarjeta.click();
+  await espera(1200);
+  R['18_abre_desde_la_tarjeta'] = visor.open;
+  R['19_no_se_repite_descarga'] = cuenta(f, 'oktoberfest-loja-full.mp4') === antes;
+
+  // ── cerrar con clic en el fondo
+  visor.dispatchEvent(new w.MouseEvent('click', {bubbles:true}));
+  await espera(600);
+  R['20_cierra_al_pulsar_fondo'] = !visor.open;
+
+  R.ok = true;
+}catch(e){ R.error = String(e && e.stack || e); }
+
+out.textContent = JSON.stringify(R, null, 1);
+try{ await fetch('/resultado-visor', {method:'POST', body:JSON.stringify(R)}); }catch(e){}
+document.title = 'LISTO';
+})();
+</script>

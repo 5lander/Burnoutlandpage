@@ -231,7 +231,9 @@
     <div class="reel">
       <article class="tile reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
         <div class="meta"><div class="mono">DOCUMENTAL · A'I COFÁN</div><h4>DURENO 1</h4></div></article>
-      <article class="tile b v reveal">
+      <article class="tile b v reveal"
+               data-full="assets/video/oktoberfest-loja-full.mp4"
+               data-full-poster="assets/video/oktoberfest-loja-full.jpg">
         <!-- El reel ocupa el sitio del degradado y hereda su clase, asi que el zoom
              al pasar el raton y el recorte de la tarjeta siguen siendo los mismos.
              Es decorativo: sin sonido, fuera del orden de tabulacion y oculto para
@@ -245,7 +247,7 @@
           <source src="assets/video/oktoberfest-loja.webm" type="video/webm">
           <source src="assets/video/oktoberfest-loja.mp4" type="video/mp4">
         </video>
-        <div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
+        <button type="button" class="play" data-visor aria-label="Ver el reel completo de Oktoberfest Loja"><svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></button>
         <div class="meta"><div class="mono">CAMPAÑA · EXPECTATIVA</div><h4>Oktoberfest Loja</h4></div></article>
       <article class="tile c reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
         <div class="meta"><div class="mono">TERRITORIO · RECORRIDO</div><h4>La vuelta a Zamora</h4></div></article>
@@ -333,6 +335,31 @@
     </div>
   </div>
 </footer>
+
+<!--
+  Visor del reel. <dialog> nativo: el navegador se encarga del atrapado de foco,
+  de la tecla Escape, de inertizar el resto de la pagina y de devolver el foco
+  al boton al cerrar. Escribir eso a mano y que salga bien es mucho mas dificil.
+
+  El visor esta vacio: el video, la portada y el rotulo los pone app.js con lo
+  que declare la tarjeta desde la que se abre (data-full y data-full-poster), asi
+  que sirve para las tres tarjetas sin tocar nada. Son 6,6 MB por pieza, y nadie
+  deberia descargarlos por pasar por la pagina: solo se piden al abrir.
+
+  Lo que se ve aqui es la version tal y como se grabo, 1920x1080 con sonido y
+  sin el recorte 4:5 que impone la tarjeta.
+-->
+<dialog id="visor" class="visor" aria-label="Reel: Oktoberfest Loja">
+  <div class="visor-caja">
+    <div class="visor-barra">
+      <p class="visor-meta"><span>CAMPAÑA · EXPECTATIVA</span>Oktoberfest Loja</p>
+      <button type="button" class="visor-x" data-cerrar aria-label="Cerrar el reel">
+        <svg width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><path d="M1 1l11 11M12 1L1 12" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+    <video id="visor-v" controls playsinline preload="none"></video>
+  </div>
+</dialog>
 
 <script src="assets/js/medicion.js"></script>
 <script src="assets/js/scene.js"></script>

@@ -91,7 +91,7 @@ El detalle de cada herramienta está en [`tools/LEEME.md`](tools/LEEME.md).
 | `assets/js/medicion.js` | Consentimiento, aviso de cookies y los seis eventos. Nada se carga antes de aceptar. |
 | `assets/fonts/` | Poppins 300/400/500/700 y JetBrains Mono 400/500, subconjuntos latin y latin-ext. 10 archivos, 112 KB en disco, ~62 KB por visita. |
 | `assets/img/og.jpg` | Imagen de compartición, 1200×630, 28 KB. Generada por código desde el path del isotipo. |
-| `assets/video/` | El reel de *Oktoberfest Loja*, en WebM y MP4, más su fotograma de portada. Ver [El reel del portafolio](#el-reel-del-portafolio). |
+| `assets/video/` | El reel de *Oktoberfest Loja*: el bucle recortado de la tarjeta (WebM y MP4) y la pieza completa 1920×1080 con sonido del visor, más sus dos fotogramas de portada. Ver [El reel del portafolio](#el-reel-del-portafolio). |
 | `assets/img/favicon.svg` · `assets/img/icono-512.png` | Iconos, derivados del mismo path. |
 | `favicon.ico` · `apple-touch-icon.png` | En la raíz porque los navegadores los piden ahí. |
 | `.htaccess` | HTTPS forzado, dominio sin www, caché, compresión, sin listados y `tools/` denegado. |
@@ -393,7 +393,23 @@ sonido, `aria-hidden`, fuera del orden de tabulación.
 se piden al cargar la página: `app.js` los pone cuando la tarjeta se acerca a
 pantalla, y pausa al salir. Con `prefers-reduced-motion` no se pide el vídeo en
 ningún momento: se queda la portada quieta. La carga inicial de la portada sigue
-siendo la misma que antes del reel, unos 128 KB.
+siendo la misma que antes del reel, unos 130 KB.
+
+### El visor
+
+Al pulsar la tarjeta —o el círculo de *play* con el teclado— se abre la pieza
+completa: **1920×1080, con sonido y sin el recorte 4:5**, tal y como se grabó.
+Son 6,6 MB que **solo se descargan al abrir**, y no se vuelven a pedir si se
+abre otra vez la misma pieza.
+
+Está montado sobre `<dialog>` nativo, no sobre divs: el navegador se encarga del
+atrapado de foco, de la tecla Escape, de inertizar el resto de la página y de
+devolver el foco al botón al cerrar. Escribir eso a mano y que salga bien es
+mucho más difícil que usarlo. Cierran el visor el botón, Escape y el clic en el
+fondo, y al cerrar se reanuda el bucle mudo de la tarjeta.
+
+El visor no sabe nada de ninguna pieza concreta: coge el archivo, la portada y
+el rótulo de la tarjeta desde la que se abre.
 
 La tarjeta lleva además la clase `.v`, que activa dos cosas que solo tienen
 sentido sobre imagen y que **no afectan a las otras dos tarjetas**: un velo
@@ -425,10 +441,24 @@ tarjeta (411 px), bajar de estos ajustes no se distingue y subir solo engorda:
 el resultado son ~1,3 MB en WebM y ~1,4 MB en MP4, de los que cada navegador se
 descarga uno solo.
 
-Después, en `index.html`, cambiar el `<div class="bgw"></div>` de la tarjeta por
-el bloque `<video>` de la de Oktoberfest, añadir `v` a las clases del
-`<article>`, y en `app.js` cambiar `querySelector` por `querySelectorAll` en el
-bloque del reel. Y pasar `tools/auditar-reel.html`.
+Y la versión completa para el visor, sin recortar y con sonido:
+
+```bash
+ffmpeg -i MASTER.MP4 -vf "scale=1920:-2:flags=lanczos" -c:v libx264 -profile:v high   -level 4.1 -pix_fmt yuv420p -crf 23 -preset slow -movflags +faststart   -c:a aac -b:a 128k assets/video/NOMBRE-full.mp4
+
+ffmpeg -ss 15.5 -i MASTER.MP4 -frames:v 1 -vf "scale=1100:-2:flags=lanczos"   -q:v 7 assets/video/NOMBRE-full.jpg
+```
+
+Ahí basta con MP4: H.264 lo reproduce todo. Las dos codificaciones del bucle
+existen porque en ese camino sí compensa ahorrar bytes.
+
+Después, en `index.html`, copiar el `<article>` de la tarjeta de Oktoberfest
+sobre la que toque: añadir `v` a sus clases, poner `data-full` y
+`data-full-poster`, cambiar el `<div class="bgw"></div>` por el bloque `<video>`
+y el `<div class="play">` por el `<button class="play" data-visor>`. **No hay
+que tocar `app.js`**: el bucle y el visor recorren todas las tarjetas que lo
+declaren. Al terminar, pasar `tools/auditar-reel.html` y
+`tools/auditar-visor.html`.
 
 ## Datos estructurados
 
