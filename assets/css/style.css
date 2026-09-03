@@ -42,7 +42,12 @@
 :root{
   --bg:#08080C; --studio:#101018; --rig:#1A1A24;
   --core:#6C2BFF; --surge:#A47CFF; --mist:#E4D9FF; --void:#1B0740;
-  --bone:#F6F5F2; --ash:#9A9AAA; --graphite:#55555F; --ember:#FF4D1A;
+  --bone:#F6F5F2; --ash:#9A9AAA; --graphite:#7B7B85; --ember:#FF4D1A;
+  /* El placeholder es el unico gris apagado que cae sobre --rig, que es el
+     fondo mas claro de la paleta: con --graphite se queda en 4,12:1. Siete
+     pasos mas de luz lo llevan a 4,54:1 sin acercarlo al gris de las
+     etiquetas (--ash), asi que el campo sigue leyendose como vacio. */
+  --graphite-rig:#82828C;
   --mono:"JetBrains Mono","DejaVu Sans Mono",monospace;
   --sans:"Poppins",system-ui,sans-serif;
   --marg:clamp(20px,5vw,88px); --gut:24px; --len:1737;
@@ -210,7 +215,7 @@ label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;c
 .field{margin-bottom:20px}
 input{width:100%;background:var(--rig);border:1px solid rgba(255,255,255,.09);border-radius:12px;
   color:var(--bone);font-family:var(--sans);font-size:15px;padding:14px 16px;transition:.25s}
-input::placeholder{color:var(--graphite)}
+input::placeholder{color:var(--graphite-rig)}
 input:focus{outline:none;border-color:var(--core);box-shadow:0 0 0 4px rgba(108,43,255,.2)}
 .chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:520px){.chips{grid-template-columns:1fr}}

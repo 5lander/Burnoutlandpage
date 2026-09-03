@@ -11,7 +11,8 @@ const PAL = {
   rig:      [0x1A, 0x1A, 0x24],   // --rig
   bone:     [0xF6, 0xF5, 0xF2],   // --bone
   ash:      [0x9A, 0x9A, 0xAA],   // --ash
-  graphite: [0x55, 0x55, 0x5F],   // --graphite
+  graphite: [0x7B, 0x7B, 0x85],   // --graphite
+  graphrig: [0x82, 0x82, 0x8C],   // --graphite-rig (solo el placeholder)
   surge:    [0xA4, 0x7C, 0xFF],   // --surge
   mist:     [0xE4, 0xD9, 0xFF],   // --mist
   core:     [0x6C, 0x2B, 0xFF],   // --core
@@ -36,7 +37,7 @@ const CASOS = [
   ['h1 / h2 / h3',            PAL.bone, 1,    PAL.bg,     34, true,  true],
   ['.chip (texto)',           PAL.bone, 1,    PAL.rig,    14, false, true],
   ['input (texto escrito)',   PAL.bone, 1,    PAL.rig,    15, false, true],
-  ['input::placeholder',      PAL.graphite, 1, PAL.rig,   15, false, false],
+  ['input::placeholder',      PAL.graphrig, 1, PAL.rig,   15, false, false],
   ['.mono / label / .ash',    PAL.ash, 1,     PAL.bg,     11, false, false],
   ['label sobre studio',      PAL.ash, 1,     PAL.studio, 10, false, false],
   ['.payload',                PAL.ash, 1,     PAL.bg,     11.5, false, false],
