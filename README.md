@@ -23,6 +23,9 @@ en el repositorio es exactamente lo que se sirve.
 >   herramienta y no sale ninguna petición.
 > - **Dos de los tres reels del portafolio siguen siendo rectángulos de
 >   color.** Solo *Oktoberfest Loja* es una pieza real.
+> - **Los valores de `main_challenge` cambiaron** con el copy nuevo y hay que
+>   actualizarlos en el flujo de n8n antes de conectar el formulario. Ver
+>   [El copy](#el-copy).
 >
 > Por eso la indexación está bloqueada: ver
 > [Bloqueo de indexación](#bloqueo-de-indexación). La lista completa de lo que
@@ -41,6 +44,7 @@ en el repositorio es exactamente lo que se sirve.
 - [Qué revisar tras el primer push](#qué-revisar-tras-el-primer-push)
 - [Marcadores pendientes](#marcadores-pendientes)
 - [Antes de publicar](#antes-de-publicar)
+- [El copy](#el-copy)
 - [El reel del portafolio](#el-reel-del-portafolio)
 - [Datos estructurados](#datos-estructurados)
 - [Reglas del proyecto](#reglas-del-proyecto)
@@ -381,6 +385,71 @@ En orden. Los cinco primeros son bloqueantes.
    La tarjeta se comprobó simulando el rastreador, nunca contra WhatsApp de
    verdad.
 9. Repasar el anillo de foco en Chrome y Firefox.
+
+## El copy
+
+Todo el texto visible sale de **«Guía de Textos Exactos para la Web
+(Copywriting)»**, el documento de seis bloques que entregó el cliente. La
+correspondencia con las secciones del sitio:
+
+| Bloque del documento | Sección |
+|---|---|
+| 01 · Pantalla principal | La capa `#l0` de la escena del canvas |
+| 02 · El problema del mercado | `#problema` — **sección nueva** |
+| 03 · Los 3 departamentos | `#nodos` |
+| 04 · Cómo trabajamos | `#ventas` |
+| 05 · Formas de trabajo | `#modalidades` — **sección nueva** |
+| 06 · Llamado a la acción final | `#auditoria` |
+
+**Dos secciones no existían en el prototipo aprobado** y se crearon para este
+copy: la comparativa (`#problema`) y las modalidades de contratación
+(`#modalidades`). El resto son cambios de texto sobre contenedores que ya
+estaban.
+
+**Texto que no venía en el documento y hubo que escribir**, porque el documento
+no lo cubría y dejarlo con el copy viejo habría hecho que el sitio contara dos
+historias distintas:
+
+- Las capas `#l1`, `#l2` y `#l3` de la escena, y las cuatro etiquetas flotantes.
+  Todo redactado a partir de ideas que sí están en el documento.
+- La línea de público al pie de la tarjeta de *Estrategia & Crecimiento*.
+- Los tres puntos de confianza del cierre, derivados del microtexto del bloque 06.
+- Los rótulos de fase del HUD (`assets/js/scene.js`).
+
+### Los valores que viajan a n8n cambiaron
+
+Los chips del formulario mandan su `data-val` tal cual en `main_challenge`.
+**Hay que actualizarlo en el flujo antes de conectar el `ENDPOINT`:**
+
+| Antes | Ahora |
+|---|---|
+| `Producción Audiovisual` | `Film & Studio` |
+| `Identidad de Marca` | `Estrategia & Crecimiento` |
+| `Embudo y Conversión` | `Desarrollo & Automatización` |
+| `Automatizaciones` | `Full-Growth Partner` |
+
+### Marcas registradas
+
+El copy usa **The Full-Loop Revenue System™** y **Full-Growth Partner™** con el
+símbolo de marca registrada. Si no están registradas de verdad, es una
+afirmación legal en portada: conviene confirmarlo antes de publicar.
+
+### `font-display: optional`
+
+El titular y el párrafo del hero pasaron de cuatro palabras a dos frases largas.
+Poppins es un 14 % más ancha que la tipografía del sistema, así que con
+`font-display: swap` el bloque recomponía sus líneas al llegar la fuente y se
+movía entero: **0,215 de CLS**, contra un presupuesto de 0,1, y de forma
+intermitente, porque es una carrera.
+
+Los seis subconjuntos `latin` pasaron a `optional` y se precargan los cinco que
+se ven arriba. Con `optional` no hay carrera: si la fuente está lista al primer
+pintado se usa, y si no, esa visita se queda con la del sistema y no se cambia
+después. **CLS medido: 0,0016–0,0149.** Comprobado además que Poppins sí se
+aplica en 4G simulada, en tres tomas de tres.
+
+Si algún día se acorta el copy del hero, esto se puede revisar; mientras el
+titular sea largo, `swap` no es viable.
 
 ## El reel del portafolio
 

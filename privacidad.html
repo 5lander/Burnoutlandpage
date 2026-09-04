@@ -12,6 +12,12 @@
 <meta name="theme-color" content="#08080C">
 <link rel="preload" href="assets/fonts/poppins-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Los latin van en font-display:optional (ver style.css): si no estan listos
+     al primer pintado, esa visita se queda con la del sistema. Se precargan
+     tambien aqui para que eso no pase en las paginas secundarias. -->
+<link rel="preload" href="assets/fonts/poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/poppins-500-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="page">
@@ -24,7 +30,7 @@
   <div class="wrap nav">
     <a class="brand" href="index.html"><svg viewBox="0 0 1000 1000" aria-hidden="true"><use href="#iso"/></svg>BURNOUT</a>
     <nav class="nav-links">
-      <a href="index.html#trabajo">Trabajo</a><a href="index.html#nodos">Servicios</a><a href="index.html#ventas">Método</a>
+      <a href="index.html#nodos">Servicios</a><a href="index.html#ventas">Método</a><a href="index.html#modalidades">Modalidades</a><a href="index.html#trabajo">Portafolio</a>
     </nav>
   </div>
 </header>
@@ -96,8 +102,8 @@
   <div class="wrap">
     <div class="fgrid">
       <div><div class="fbrand"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg>BURNOUT</div>
-        <p style="margin-top:18px;font-size:14px;max-width:30ch">Convertimos el agotamiento en un bucle infinito de energía creativa.</p>
-        <a href="index.html#auditoria" class="btn btn-p" style="margin-top:26px">Agendar auditoría</a></div>
+        <p style="margin-top:18px;font-size:14px;max-width:32ch">Marca, tecnología y cierre en un solo ecosistema comercial.</p>
+        <a href="index.html#auditoria" class="btn btn-p" style="margin-top:26px">Agendar diagnóstico</a></div>
       <div class="fmeta">BURNOUT.EC<br>HOLA@BURNOUT.EC<br>QUITO · LOJA — ECUADOR</div>
     </div>
     <div class="rule"></div>

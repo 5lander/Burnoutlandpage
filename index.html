@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BURNOUT — Agencia Creativa</title>
-<meta name="description" content="Agencia creativa en Ecuador. Estrategia con nivel de producción de cine: marca, audiovisual, web y automatizaciones. Auditoría gratuita de marca y embudo.">
+<meta name="description" content="Producción cinematográfica in-house, desarrollo web y automatizaciones de cierre con IA en un solo ecosistema comercial. Sesión de diagnóstico gratuita.">
 <!-- SE QUITA PARA PUBLICAR. Mientras el sitio no sea lanzable, esta linea
      impide que la portada se indexe. Es el punto 1 de "Antes de publicar" del
      README, junto con el Disallow de robots.txt: son dos cambios, no uno.
@@ -26,7 +26,7 @@
 <meta property="og:locale" content="es_EC">
 <meta property="og:url" content="https://burnout.ec/">
 <meta property="og:title" content="BURNOUT — Agencia Creativa">
-<meta property="og:description" content="Estrategia con nivel de producción de cine. Convertimos el agotamiento de tu marca en un bucle infinito de energía creativa.">
+<meta property="og:description" content="Diseñamos marcas que imponen autoridad. Construimos la tecnología que cierra las ventas. Un solo ecosistema comercial, no cuatro proveedores.">
 <meta property="og:image" content="https://burnout.ec/assets/img/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
@@ -36,12 +36,19 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="BURNOUT — Agencia Creativa">
-<meta name="twitter:description" content="Estrategia con nivel de producción de cine. Convertimos el agotamiento de tu marca en un bucle infinito de energía creativa.">
+<meta name="twitter:description" content="Diseñamos marcas que imponen autoridad. Construimos la tecnología que cierra las ventas. Un solo ecosistema comercial, no cuatro proveedores.">
 <meta name="twitter:image" content="https://burnout.ec/assets/img/og.jpg">
 <meta name="twitter:image:alt" content="Isotipo y logotipo de BURNOUT sobre fondo onyx, con la bajada Agencia creativa · Ecuador.">
 
 <link rel="preload" href="assets/fonts/poppins-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- El hero pasó a llevar un titular largo y un párrafo de tres líneas. Sin
+     precargar los pesos 400 y 500, Poppins llegaba ~800 ms después que el 700 y
+     el bloque entero se recomponía al cambiar de tipografía: 0,22 de CLS, muy
+     por encima del presupuesto de 0,1. Con la precarga baja a 0,004. -->
+<link rel="preload" href="assets/fonts/poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/poppins-500-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/js/app.js" as="script">
 <link rel="stylesheet" href="assets/css/style.css">
 
@@ -69,7 +76,7 @@
       "name": "BURNOUT",
       "url": "https://burnout.ec/",
       "email": "hola@burnout.ec",
-      "description": "Agencia creativa ecuatoriana. Estrategia, identidad de marca, produccion audiovisual, desarrollo web y automatizaciones.",
+      "description": "Ecosistema comercial ecuatoriano: produccion audiovisual con estandar de cine, estrategia de demanda, desarrollo web y automatizaciones de cierre con inteligencia artificial.",
       "logo": {
         "@type": "ImageObject",
         "url": "https://burnout.ec/assets/img/icono-512.png",
@@ -114,8 +121,8 @@
   <div class="wrap nav">
     <a class="brand" href="#scene"><svg viewBox="0 0 1000 1000" aria-hidden="true"><use href="#iso"/></svg>BURNOUT</a>
     <nav class="nav-links">
-      <a href="#trabajo">Trabajo</a><a href="#nodos">Servicios</a><a href="#ventas">Método</a>
-      <a href="#auditoria" class="btn btn-p">Agendar auditoría</a>
+      <a href="#nodos">Servicios</a><a href="#ventas">Método</a><a href="#modalidades">Modalidades</a><a href="#trabajo">Portafolio</a>
+      <a href="#auditoria" class="btn btn-p">Agendar diagnóstico</a>
     </nav>
   </div>
 </header>
@@ -126,99 +133,128 @@
     <canvas id="fx" aria-hidden="true"></canvas>
 
     <div class="layer on" id="l0"><div class="in">
-      <div class="eyebrow"><span class="dot"></span><span class="mono">AGENCIA CREATIVA · ECUADOR</span></div>
-      <h1><span class="ln">Estrategia con nivel</span><br><span class="ln">de producción de cine.</span></h1>
-      <p class="lead">Convertimos el agotamiento de tu marca en un bucle infinito de energía creativa.</p>
-      <div class="cta"><a href="#auditoria" class="btn btn-p">Agendar auditoría gratuita</a><a href="#trabajo" class="btn btn-s">Ver trabajo</a></div>
+      <div class="eyebrow"><span class="dot"></span><span class="mono">EL FIN DE LAS AGENCIAS FRAGMENTADAS</span></div>
+      <h1><span class="ln">Diseñamos marcas que imponen autoridad.</span> <span class="ln">Construimos la tecnología que cierra las ventas.</span></h1>
+      <p class="lead">La mayoría de empresas contratan a una productora para hacer videos bonitos, a un programador para la web y a una agencia para pautar anuncios. El resultado es un sistema desconectado que no genera ingresos. <b>Integramos producción cinematográfica in-house, ingeniería de desarrollo web y automatizaciones de cierre con Inteligencia Artificial en un solo ecosistema comercial.</b></p>
+      <div class="cta"><a href="#auditoria" class="btn btn-p">Agendar Sesión de Diagnóstico</a><a href="#trabajo" class="btn btn-s">Ver Portafolio y Casos de Éxito</a></div>
     </div></div>
 
     <div class="layer" id="l1"><div class="in">
-      <div class="mono">EL CONCEPTO</div>
-      <h2 style="margin-top:18px">El agotamiento no es el final.<br>Es el punto de giro.</h2>
-      <p class="lead">Cuando tu marca deja de decir algo, el problema no se arregla con más pauta. Se arregla reordenando la idea.</p>
+      <div class="mono">EL PROBLEMA</div>
+      <h2 style="margin-top:18px">Cuatro proveedores.<br>Ninguna venta.</h2>
+      <p class="lead">Una productora graba, un programador maqueta y una agencia pauta. Nadie responde por el resultado, y el sistema desconectado no genera ingresos.</p>
     </div></div>
 
     <div class="layer" id="l2"><div class="in">
-      <div class="mono">LO QUE HACEMOS</div>
-      <h2 style="margin-top:18px">Cuatro áreas.<br>Un solo equipo.</h2>
-      <p class="lead">No coordinas a una agencia, un productor y un programador por separado. Todo sale del mismo lugar y con el mismo estándar.</p>
+      <div class="mono">LA RESPUESTA</div>
+      <h2 style="margin-top:18px">Un solo ecosistema<br>comercial.</h2>
+      <p class="lead">Producción cinematográfica in-house, ingeniería de desarrollo web y automatizaciones de cierre con inteligencia artificial. Bajo el mismo techo y con el mismo estándar.</p>
     </div></div>
 
     <div class="layer" id="l3"><div class="in">
-      <div class="mono">Y NO TERMINA AHÍ</div>
-      <h2 style="margin-top:18px">La pieza atrae.<br>El sistema cierra.</h2>
-      <p class="lead">Dejamos instalado el embudo que recibe al cliente que esa pieza generó y lo pone frente a tu vendedor.</p>
+      <div class="mono">EL CIERRE</div>
+      <h2 style="margin-top:18px">La pieza atrae.<br>La IA cierra.</h2>
+      <p class="lead">Asistentes conversacionales que atienden en segundos, filtran curiosos y agendan citas 24/7. Tu equipo comercial solo entra a cerrar.</p>
     </div></div>
 
-    <div class="tag" id="t1" aria-hidden="true">Estrategia<b>Posicionamiento y narrativa</b></div>
-    <div class="tag" id="t2" aria-hidden="true">Diseño<b>Identidad y dirección de arte</b></div>
-    <div class="tag" id="t3" aria-hidden="true">Desarrollo web<b>Sitios que convierten</b></div>
-    <div class="tag" id="t4" aria-hidden="true">Audiovisual<b>Producción con acabado de cine</b></div>
+    <div class="tag" id="t1" aria-hidden="true">Film &amp; Studio<b>Cine e IA generativa</b></div>
+    <div class="tag" id="t2" aria-hidden="true">Estrategia<b>Demanda calificada</b></div>
+    <div class="tag" id="t3" aria-hidden="true">Desarrollo web<b>Sitios que cierran</b></div>
+    <div class="tag" id="t4" aria-hidden="true">Automatización<b>Cierre con IA 24/7</b></div>
 
     <div class="layer" id="l4"><div class="in" style="max-width:100%;text-align:center;margin-top:32vh">
-      <div class="mono" style="letter-spacing:.5em">AGENCIA CREATIVA · ECUADOR</div>
+      <div class="mono" style="letter-spacing:.5em">ECOSISTEMA COMERCIAL · ECUADOR</div>
       <div class="cta" style="justify-content:center;margin-top:26px">
-        <a href="#auditoria" class="btn btn-p">Agendar auditoría gratuita</a>
-        <a href="#trabajo" class="btn btn-s">Ver trabajo</a></div>
+        <a href="#auditoria" class="btn btn-p">Agendar Sesión de Diagnóstico</a>
+        <a href="#trabajo" class="btn btn-s">Ver Portafolio</a></div>
     </div></div>
 
-    <div class="hud" aria-hidden="true"><span id="phase">01 · AGOTAMIENTO</span><span class="bar"><i id="pbar"></i></span></div>
+    <div class="hud" aria-hidden="true"><span id="phase">01 · FRAGMENTACIÓN</span><span class="bar"><i id="pbar"></i></span></div>
     <div class="hint" aria-hidden="true">SCROLL ↓</div>
   </div>
 </div>
 
-<div class="marquee" aria-hidden="true"><div class="track"><span>ESTRATEGIA</span><span><em>·</em></span><span>DISEÑO</span><span><em>·</em></span><span>DESARROLLO WEB</span><span><em>·</em></span><span>AUDIOVISUAL</span><span><em>·</em></span><span>AUTOMATIZACIÓN Y EMBUDOS</span><span><em>·</em></span><span>QUITO · LOJA · ECUADOR</span><span><em>·</em></span><span>ESTRATEGIA</span><span><em>·</em></span><span>DISEÑO</span><span><em>·</em></span><span>DESARROLLO WEB</span><span><em>·</em></span><span>AUDIOVISUAL</span><span><em>·</em></span><span>AUTOMATIZACIÓN Y EMBUDOS</span><span><em>·</em></span><span>QUITO · LOJA · ECUADOR</span><span><em>·</em></span></div></div>
+<div class="marquee" aria-hidden="true"><div class="track"><span>FILM &amp; STUDIO</span><span><em>·</em></span><span>ESTRATEGIA &amp; CRECIMIENTO</span><span><em>·</em></span><span>DESARROLLO &amp; AUTOMATIZACIÓN</span><span><em>·</em></span><span>IA GENERATIVA</span><span><em>·</em></span><span>CIERRE CON IA 24/7</span><span><em>·</em></span><span>QUITO · LOJA · ECUADOR</span><span><em>·</em></span><span>FILM &amp; STUDIO</span><span><em>·</em></span><span>ESTRATEGIA &amp; CRECIMIENTO</span><span><em>·</em></span><span>DESARROLLO &amp; AUTOMATIZACIÓN</span><span><em>·</em></span><span>IA GENERATIVA</span><span><em>·</em></span><span>CIERRE CON IA 24/7</span><span><em>·</em></span><span>QUITO · LOJA · ECUADOR</span><span><em>·</em></span></div></div>
+
+<!-- BLOQUE 02 · El problema del mercado. Seccion nueva: no existia en el
+     prototipo aprobado, se crea a partir del documento de copy. -->
+<section id="problema">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="mono">EL PROBLEMA DEL MERCADO</div>
+      <h2 class="claim" style="margin-top:20px">Coordinar cuatro proveedores no es <em>una estrategia.</em></h2>
+      <p style="margin-top:24px;max-width:62ch">Cada uno optimiza su parte y nadie responde por la venta. Esto es lo que cambia cuando la producción, el tráfico y el cierre salen del mismo equipo.</p>
+    </div>
+
+    <div class="vs reveal">
+      <div class="vs-cab">
+        <span>La agencia tradicional</span>
+        <span class="vs-acc">Nuestro ecosistema integrado</span>
+      </div>
+
+      <div class="vs-fila">
+        <div class="vs-a" data-l="La agencia tradicional"><b>Publicar por bulto.</b> Graban con celulares para cumplir una cuota de 12 posts mensuales genéricos.</div>
+        <div class="vs-b" data-l="Nuestro ecosistema"><b>Estándar cinematográfico.</b> Producción con equipos de cine e IA generativa de alta gama para elevar el estatus y el precio de tu marca.</div>
+      </div>
+      <div class="vs-fila">
+        <div class="vs-a" data-l="La agencia tradicional"><b>Embudos lineales rígidos.</b> Intentan vender en frío a desconocidos o usan barreras con PDFs que nadie descarga.</div>
+        <div class="vs-b" data-l="Nuestro ecosistema"><b>Generación dinámica de demanda.</b> Contenido nativo de alto valor que educa en el feed y genera deseo real antes de la venta.</div>
+      </div>
+      <div class="vs-fila">
+        <div class="vs-a" data-l="La agencia tradicional"><b>Atención manual lenta.</b> Leads calientes esperando horas por una respuesta en WhatsApp hasta que se enfrían.</div>
+        <div class="vs-b" data-l="Nuestro ecosistema"><b>Cierre inmediato con IA.</b> Asistentes conversacionales que atienden en segundos, filtran curiosos y agendan citas 24/7.</div>
+      </div>
+      <div class="vs-fila">
+        <div class="vs-a" data-l="La agencia tradicional"><b>Métricas de vanidad.</b> Reportes llenos de likes, clics e impresiones que no mueven la facturación.</div>
+        <div class="vs-b" data-l="Nuestro ecosistema"><b>Enfoque en facturación.</b> Métricas de negocio reales: costo de adquisición de cliente (CAC) y volumen de ventas cerradas.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="nodos">
   <div class="wrap">
-    <div class="reveal"><div class="mono">CATÁLOGO OPERATIVO</div>
-    <h2 style="font-size:clamp(30px,4vw,58px);margin-top:20px">Los cuatro nodos,<br>en detalle.</h2></div>
+    <div class="reveal"><div class="mono">SERVICIOS Y ESPECIALIDADES</div>
+    <h2 style="font-size:clamp(30px,4vw,58px);margin-top:20px">Los tres departamentos<br>de especialización.</h2>
+    <p style="margin-top:24px;max-width:58ch">Puedes contratar un área específica o el ecosistema completo.</p></div>
     <div class="nodos">
       <article class="nodo reveal">
-        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">NODO 01</span></div>
-        <h3>Manejo integral de marca</h3><p class="tesis">“Antes del píxel, la decisión.”</p>
-        <ul class="ent"><li>Arquitectura de marca y posicionamiento competitivo.</li>
-        <li>Identidad visual, brandbook y dirección de arte con criterio editorial.</li>
-        <li>Comunicación y contenidos mensuales, sin publicaciones de relleno.</li></ul>
-        <div class="para">Marcas en consolidación o relanzamiento</div></article>
+        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">01 · IN-HOUSE FILM &amp; STUDIO</span></div>
+        <h3>Producción audiovisual high-end e IA generativa</h3><p class="tesis">Elevamos la percepción visual de tu negocio para que cobrar precios altos sea natural.</p>
+        <ul class="ent"><li><b>Cine real:</b> cámaras profesionales, iluminación de estudio y dirección de arte.</li>
+        <li><b>IA generativa selectiva:</b> aplicada exclusivamente a campañas disruptivas y conceptos visuales avanzados.</li>
+        <li><b>Guiones de retención:</b> narrativa enfocada en captar atención en 3 segundos y derrumbar objeciones.</li></ul>
+        <div class="para">Marcas que necesitan estatus y campañas de alto impacto</div></article>
 
       <article class="nodo reveal">
-        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">NODO 02</span></div>
-        <h3>Campañas y producción audiovisual</h3><p class="tesis">“La luz del set también es la marca.”</p>
-        <ul class="ent"><li>Comerciales y spots en 4K con dirección de fotografía.</li>
-        <li>Vertical para Reels y TikTok: kinetic typography, sound design y gancho narrativo.</li>
-        <li>Cobertura cinematográfica de eventos y activaciones.</li></ul>
-        <div class="para">Marcas que necesitan captar y retener atención</div></article>
+        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">02 · ESTRATEGIA &amp; CRECIMIENTO</span></div>
+        <h3>Captura y creación de demanda comercial</h3><p class="tesis">Atraemos a clientes calificados con capacidad y urgencia real de compra.</p>
+        <ul class="ent"><li><b>Auditoría y benchmark:</b> mapeo minucioso de competidores, tarifas y huecos de mercado.</li>
+        <li><b>Perfil de cliente real:</b> estrategia basada en problemas y detonantes de compra específicos.</li>
+        <li><b>Pauta multicanal:</b> anuncios en Meta, Google y TikTok orientados a retorno de inversión.</li></ul>
+        <div class="para">Negocios que necesitan demanda calificada, no alcance</div></article>
 
       <article class="nodo reveal">
-        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">NODO 03</span></div>
-        <h3>Desarrollo web y producto digital</h3><p class="tesis">“Interfaces veloces, medibles y optimizadas para conversión.”</p>
-        <ul class="ent"><li>Landing pages de alta conversión para captación directa.</li>
-        <li>Sitios corporativos y portafolios interactivos.</li>
-        <li>Dark mode nativo, accesibilidad AA y SEO técnico.</li></ul>
-        <div class="para">Startups, negocios digitales y servicios premium</div></article>
-
-      <article class="nodo reveal">
-        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">NODO 04</span></div>
-        <h3>Automatizaciones, funnels y CRM</h3><p class="tesis">“Creatividad respaldada por sistemas que operan 24/7.”</p>
-        <ul class="ent"><li>Funnels de captación vía Typebot y WhatsApp API.</li>
-        <li>Workflows de datos con n8n, Supabase y webhooks.</li>
-        <li>Calificación de leads y aviso al comercial en menos de 2 minutos.</li></ul>
-        <div class="para">Negocios con alto volumen de consultas</div></article>
+        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">03 · DESARROLLO &amp; AUTOMATIZACIÓN</span></div>
+        <h3>Web persuasiva y cierre con IA</h3><p class="tesis">La infraestructura técnica que convierte la atención en dinero en cuenta.</p>
+        <ul class="ent"><li><b>Desarrollo web y landings:</b> sitios rápidos diseñados para guiar al usuario hacia la compra directa.</li>
+        <li><b>Chatbots con IA:</b> agentes en WhatsApp e Instagram que responden, filtran y agendan llamadas 24/7.</li>
+        <li><b>Automatizaciones de CRM:</b> conexión entre anuncios y ventas para no perder ningún prospecto.</li></ul>
+        <div class="para">Negocios que pierden ventas por responder tarde</div></article>
     </div>
   </div>
 </section>
 
 <section id="ventas">
   <div class="wrap">
-    <div class="reveal"><div class="mono">DÓNDE TERMINA EL TRABAJO</div>
-      <h2 class="claim" style="margin-top:20px">La campaña no termina en el render. Termina en <em>la venta cerrada.</em></h2>
-      <p style="margin-top:24px">La mayoría de agencias entrega la pieza y se va. Nosotros dejamos instalado el sistema que recibe al prospecto que esa pieza generó, lo califica y lo pone frente a tu vendedor mientras todavía tiene interés.</p></div>
+    <div class="reveal"><div class="mono">CÓMO TRABAJAMOS</div>
+      <h2 class="claim" style="margin-top:20px">Metodología: <em>The Full-Loop Revenue System™</em></h2>
+      <p style="margin-top:24px">Así operamos cuando integramos todos nuestros departamentos para acelerar tus ingresos:</p></div>
     <div class="pipe" id="pipe">
-      <div class="step"><i class="beam"></i><div class="t">01 · ATRAER</div><h4>La pieza</h4><p>Spot, reel o campaña con acabado de cine y una tesis detrás.</p></div>
-      <div class="step"><i class="beam"></i><div class="t">02 · CAPTAR</div><h4>El funnel</h4><p>Typebot o WhatsApp ordena la conversación desde el primer clic.</p></div>
-      <div class="step"><i class="beam"></i><div class="t">03 · CALIFICAR</div><h4>El filtro</h4><p>Presupuesto, urgencia y ajuste. Lo frío se nutre; lo caliente pasa.</p></div>
-      <div class="step"><i class="beam"></i><div class="t">04 · CERRAR</div><h4>El aviso</h4><p>Tu comercial recibe el lead con contexto en menos de dos minutos.</p></div>
+      <div class="step"><i class="beam"></i><div class="t">PASO 1</div><h4>Inteligencia de mercado y definición del cliente</h4><p>Realizamos una auditoría a fondo de tu presencia digital y analizamos qué hace tu competencia. Identificamos exactamente a quién le duele tu solución y tiene el presupuesto para pagarla hoy.</p></div>
+      <div class="step"><i class="beam"></i><div class="t">PASO 2</div><h4>Producción de activos cinematográficos y campañas con IA</h4><p>Rodamos contenido con estándares de cine e integramos herramientas de IA para piezas específicas de alto impacto. Creamos activos que posicionan tu autoridad y anuncios pensados para detener el scroll.</p></div>
+      <div class="step"><i class="beam"></i><div class="t">PASO 3</div><h4>Infraestructura web y tráfico de alta conversión</h4><p>Construimos páginas de aterrizaje y activos web sin fricción, conectándolos a campañas de publicidad digital para canalizar tráfico calificado de inmediato.</p></div>
+      <div class="step"><i class="beam"></i><div class="t">PASO 4</div><h4>Cualificación inmediata y cierre asistido por IA</h4><p>Tus prospectos son recibidos por asistentes inteligentes en WhatsApp que responden dudas en segundos y agendan llamadas. Tu equipo comercial solo entra en acción para cerrar ventas con compradores listos.</p></div>
     </div>
   </div>
 </section>
@@ -226,8 +262,8 @@
 <section id="trabajo">
   <div class="wrap">
     <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
-      <h2 style="font-size:clamp(30px,4vw,58px)">Trabajo<br>seleccionado.</h2>
-      <p style="max-width:34ch;font-size:14px">Cada pieza se muestra con su tesis, no solo con su render. Reemplazar por reels reales.</p></div>
+      <h2 style="font-size:clamp(30px,4vw,58px)">Portafolio y<br>casos de éxito.</h2>
+      <p style="max-width:34ch;font-size:14px">Cada pieza se muestra con su tesis, no solo con su render.</p></div>
     <div class="reel">
       <article class="tile reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
         <div class="meta"><div class="mono">DOCUMENTAL · A'I COFÁN</div><h4>DURENO 1</h4></div></article>
@@ -255,16 +291,66 @@
   </div>
 </section>
 
+<!-- BLOQUE 05 · Modalidades de contratacion. Seccion nueva: no existia en el
+     prototipo aprobado, se crea a partir del documento de copy. -->
+<section id="modalidades">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="mono">FORMAS DE TRABAJO</div>
+      <h2 style="font-size:clamp(30px,4vw,58px);margin-top:20px">Modalidades<br>de contratación.</h2>
+      <p style="margin-top:24px;max-width:58ch">Tres formas de entrar, según dónde esté hoy el cuello de botella de tu negocio.</p>
+    </div>
+
+    <div class="planes">
+      <article class="plan reveal">
+        <div class="plan-t"><span class="mono">Área audiovisual</span><h3>Film &amp; High-End Content</h3></div>
+        <div class="plan-b">
+          <span class="mono">Para quién es</span>
+          <p>Empresas que ya tienen tráfico o ventas, pero necesitan renovar su imagen, ganar estatus y lanzar campañas de alto impacto visual.</p>
+        </div>
+        <div class="plan-b">
+          <span class="mono">Qué incluye</span>
+          <p>Producción audiovisual con cámaras de cine, dirección de arte, integración visual con IA y guiones de venta.</p>
+        </div>
+      </article>
+
+      <article class="plan reveal">
+        <div class="plan-t"><span class="mono">Área de desarrollo</span><h3>Tech &amp; Sales Automation</h3></div>
+        <div class="plan-b">
+          <span class="mono">Para quién es</span>
+          <p>Negocios con buen flujo de prospectos que pierden ventas por responder tarde, no tener web efectiva o carecer de seguimiento.</p>
+        </div>
+        <div class="plan-b">
+          <span class="mono">Qué incluye</span>
+          <p>Desarrollo web, landing pages de alta velocidad, integración de CRM y asistentes inteligentes en WhatsApp e Instagram.</p>
+        </div>
+      </article>
+
+      <article class="plan plan-alto reveal">
+        <div class="plan-t"><span class="mono">Socio integral</span><h3>Full-Growth Partner™</h3></div>
+        <div class="plan-b">
+          <span class="mono">Para quién es</span>
+          <p>Empresas consolidadas que buscan delegar toda su adquisición de clientes y tecnología en un solo equipo de alto nivel.</p>
+        </div>
+        <div class="plan-b">
+          <span class="mono">Qué incluye</span>
+          <p><b>Todo el ecosistema:</b> auditoría, estrategia mensual, producción de cine, IA, pauta publicitaria, soporte web y automatizaciones de venta continuas.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
 <section id="auditoria">
   <div class="wrap audit">
     <div class="reveal">
-      <div class="mono">MÓDULO DE CONVERSIÓN</div>
-      <h2 style="font-size:clamp(30px,3.8vw,54px);margin-top:20px">Auditoría gratuita<br>de marca y embudo.</h2>
-      <p style="margin-top:24px">Revisamos tu marca, tu contenido y tu embudo antes de hablar de presupuesto. Si el problema no es nuestro, te lo decimos y te ahorramos la reunión.</p>
+      <div class="mono">CIERRE DE CONVERSIÓN</div>
+      <h2 style="font-size:clamp(30px,3.8vw,54px);margin-top:20px">Deja de coordinar con 4 proveedores distintos para lograr una venta.</h2>
+      <p style="margin-top:24px">Analicemos tus canales actuales y los cuellos de botella de tu negocio. Evaluemos si necesitas un desarrollo técnico puntual o la implementación de nuestro sistema comercial completo.</p>
       <ul class="trust">
-        <li><b>30 minutos.</b> Videollamada con dirección creativa, no con un vendedor.</li>
-        <li><b>Revisión previa.</b> Llegamos con tu perfil o tu web ya analizados.</li>
-        <li><b>Sin compromiso.</b> Te queda el diagnóstico, contrates o no.</li>
+        <li><b>30 minutos, sin costo.</b> Sesión estratégica para evaluar viabilidad y arquitectura comercial.</li>
+        <li><b>Diagnóstico, no venta.</b> Llegamos con tus canales actuales ya analizados.</li>
+        <li><b>Puntual o completo.</b> Te decimos si te basta un desarrollo concreto o necesitas el ecosistema.</li>
       </ul>
     </div>
     <div class="form reveal">
@@ -277,10 +363,14 @@
       <div class="pane">
         <div class="field"><label id="lbl-reto">¿Cuál es tu principal desafío hoy?</label>
           <div class="chips" role="group" aria-labelledby="lbl-reto" aria-describedby="e-reto">
-            <button class="chip" data-val="Producción Audiovisual" aria-pressed="false">Producción audiovisual</button>
-            <button class="chip" data-val="Identidad de Marca" aria-pressed="false">Identidad de marca</button>
-            <button class="chip" data-val="Embudo y Conversión" aria-pressed="false">Embudo y conversión</button>
-            <button class="chip" data-val="Automatizaciones" aria-pressed="false">Automatizaciones</button>
+            <!-- CUIDADO: data-val viaja tal cual en main_challenge hacia n8n.
+                 Cambiaron con el copy nuevo; hay que actualizarlo en el flujo.
+                 Antes: Producción Audiovisual · Identidad de Marca ·
+                        Embudo y Conversión · Automatizaciones -->
+            <button class="chip" data-val="Film & Studio" aria-pressed="false">Imagen y producción</button>
+            <button class="chip" data-val="Estrategia & Crecimiento" aria-pressed="false">Demanda y captación</button>
+            <button class="chip" data-val="Desarrollo & Automatización" aria-pressed="false">Web y automatización</button>
+            <button class="chip" data-val="Full-Growth Partner" aria-pressed="false">El ecosistema completo</button>
           </div><p class="err" id="e-reto"></p></div>
         <div class="fnav"><button class="btn btn-s" data-prev>Atrás</button><button class="btn btn-p" data-next>Continuar</button></div>
       </div>
@@ -298,7 +388,7 @@
         </div>
         <p class="err" id="e-consent"></p>
 
-        <div class="fnav"><button class="btn btn-s" data-prev>Atrás</button><button class="btn btn-p" data-send>Enviar y ver agenda</button></div>
+        <div class="fnav"><button class="btn btn-s" data-prev>Atrás</button><button class="btn btn-p" data-send>Agendar Sesión de Diagnóstico</button></div>
         <p class="fstatus" id="fstatus" role="status" aria-live="polite"></p>
       </div>
       <div class="ok"><svg viewBox="0 0 1000 1000" aria-hidden="true"><use href="#iso"/></svg>
@@ -324,8 +414,8 @@
   <div class="wrap">
     <div class="fgrid">
       <div><div class="fbrand"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg>BURNOUT</div>
-        <p style="margin-top:18px;font-size:14px;max-width:30ch">Convertimos el agotamiento en un bucle infinito de energía creativa.</p>
-        <a href="#auditoria" class="btn btn-p" style="margin-top:26px">Agendar auditoría</a></div>
+        <p style="margin-top:18px;font-size:14px;max-width:32ch">Marca, tecnología y cierre en un solo ecosistema comercial.</p>
+        <a href="#auditoria" class="btn btn-p" style="margin-top:26px">Agendar diagnóstico</a></div>
       <div class="fmeta">BURNOUT.EC<br>HOLA@BURNOUT.EC<br>QUITO · LOJA — ECUADOR</div>
     </div>
     <div class="rule"></div>

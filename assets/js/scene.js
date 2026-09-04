@@ -86,7 +86,7 @@ var tags = ['t1','t2','t3','t4'].map(function(i){return document.getElementById(
 var brand = document.querySelector('.brand');
 var pbar = document.getElementById('pbar'), phase = document.getElementById('phase'),
     head = document.getElementById('head'), hint = document.querySelector('.hint');
-var PH = ['01 · EL PROBLEMA','02 · EL GIRO','03 · LO QUE HACEMOS','04 · BURNOUT'];
+var PH = ['01 · FRAGMENTACIÓN','02 · ECOSISTEMA','03 · CIERRE','04 · BURNOUT'];
 var prog = 0, target = 0;
 // P5 · una sola vez: aviso de que se ha pasado la mitad del recorrido
 var mitadAvisada = false;

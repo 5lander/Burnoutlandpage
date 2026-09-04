@@ -1,24 +1,38 @@
+/* ── font-display ───────────────────────────────────────────────────────────
+   Los seis subconjuntos "latin" van en optional, no en swap, y estan
+   precargados en el <head>. Con swap el navegador pinta con la tipografia del
+   sistema y cambia a Poppins cuando llega: Poppins es un 14% mas ancha, asi que
+   el titular y el parrafo del hero recomponian sus lineas y el bloque entero se
+   movia. Medido en 4G: 0,215 de CLS, contra un presupuesto de 0,1, y ademas
+   intermitente, porque es una carrera.
+
+   Con optional no hay carrera posible: si la fuente esta lista al primer
+   pintado se usa, y si no llega a tiempo se queda la del sistema para esa
+   visita y NO se cambia despues. En los dos casos, cero desplazamiento.
+   Los subconjuntos latin-ext siguen en swap: son caracteres raros y su
+   reemplazo no mueve la maquetacion.
+*/
 /* Fuentes autoalojadas. Archivos y unicode-range tal como los sirve Google Fonts,
    descargados a assets/fonts/ para no depender de un tercero. */
-@font-face{font-family:"Poppins";font-style:normal;font-weight:300;font-display:swap;
+@font-face{font-family:"Poppins";font-style:normal;font-weight:300;font-display:optional;
   src:url("../fonts/poppins-300-latin.woff2") format("woff2");
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:"Poppins";font-style:normal;font-weight:300;font-display:swap;
   src:url("../fonts/poppins-300-latin-ext.woff2") format("woff2");
   unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:"Poppins";font-style:normal;font-weight:400;font-display:swap;
+@font-face{font-family:"Poppins";font-style:normal;font-weight:400;font-display:optional;
   src:url("../fonts/poppins-400-latin.woff2") format("woff2");
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:"Poppins";font-style:normal;font-weight:400;font-display:swap;
   src:url("../fonts/poppins-400-latin-ext.woff2") format("woff2");
   unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:"Poppins";font-style:normal;font-weight:500;font-display:swap;
+@font-face{font-family:"Poppins";font-style:normal;font-weight:500;font-display:optional;
   src:url("../fonts/poppins-500-latin.woff2") format("woff2");
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:"Poppins";font-style:normal;font-weight:500;font-display:swap;
   src:url("../fonts/poppins-500-latin-ext.woff2") format("woff2");
   unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:"Poppins";font-style:normal;font-weight:700;font-display:swap;
+@font-face{font-family:"Poppins";font-style:normal;font-weight:700;font-display:optional;
   src:url("../fonts/poppins-700-latin.woff2") format("woff2");
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:"Poppins";font-style:normal;font-weight:700;font-display:swap;
@@ -26,13 +40,13 @@
   unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
 /* JetBrains Mono: Google sirve un unico archivo por subset para 400 y 500,
    asi que ambos pesos apuntan al mismo woff2 y el navegador lo descarga una sola vez. */
-@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:optional;
   src:url("../fonts/jetbrains-mono-latin.woff2") format("woff2");
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;
   src:url("../fonts/jetbrains-mono-latin-ext.woff2") format("woff2");
   unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:optional;
   src:url("../fonts/jetbrains-mono-latin.woff2") format("woff2");
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;
@@ -117,8 +131,18 @@ header.silent .nav-links,header.silent .brand{opacity:0!important;pointer-events
 .layer .in{max-width:min(760px,52vw)}
 @media(max-width:900px){.layer .in{max-width:100%}.layer{align-content:end;padding-bottom:96px;
   background:linear-gradient(180deg,rgba(8,8,12,0) 30%,rgba(8,8,12,.86) 58%,var(--bg) 78%)}}
-#l0 h1{font-size:clamp(34px,4.9vw,76px);letter-spacing:-.045em;line-height:.94}
-@media(min-width:981px){#l0 .ln{white-space:nowrap}}
+/* El copy nuevo del hero son dos frases largas, no dos lineas cortas: se baja
+   el cuerpo, se ensancha la caja y se quita el nowrap por linea, que con este
+   texto desbordaba la pantalla. .ln sigue existiendo porque la escena la usa. */
+#l0 h1{font-size:clamp(29px,3.5vw,54px);letter-spacing:-.035em;line-height:1.02}
+#l0 .in{max-width:min(880px,60vw)}
+#l0 .lead{max-width:56ch;font-size:16px;line-height:1.6}
+#l0 .lead b{color:var(--bone);font-weight:500}
+@media(max-width:900px){
+  #l0 .in{max-width:100%}
+  #l0 h1{font-size:clamp(26px,6.4vw,34px)}
+  #l0 .lead{font-size:14.5px;max-width:100%}
+}
 .eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:26px}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--ember);box-shadow:0 0 12px var(--ember)}
 .lead{margin-top:26px;font-size:17px;max-width:44ch}
@@ -149,10 +173,16 @@ header.silent .nav-links,header.silent .brand{opacity:0!important;pointer-events
 
 /* NODOS */
 #nodos{background:var(--studio);z-index:2}
-.nodos{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gut);margin-top:56px}
-@media(max-width:880px){.nodos{grid-template-columns:1fr}}
+.nodos{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gut);margin-top:56px}
+@media(max-width:1080px){.nodos{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.nodos{grid-template-columns:1fr}}
+.ent li b{color:var(--bone);font-weight:500}
 .nodo{position:relative;background:var(--bg);border:1px solid rgba(255,255,255,.07);border-radius:12px;
-  padding:36px;overflow:hidden;transition:border-color .4s,transform .4s}
+  padding:36px;overflow:hidden;transition:border-color .4s,transform .4s;
+  display:flex;flex-direction:column}
+/* Con tres tarjetas de alto igual pero contenido desigual, la linea de publico
+   quedaba a tres alturas distintas. Empujada abajo, las tres coinciden. */
+.nodo .para{margin-top:auto}
 .nodo:hover{border-color:rgba(164,124,255,.45);transform:translateY(-4px)}
 .nodo::after{content:"";position:absolute;inset:auto auto -60% -20%;width:70%;aspect-ratio:1;
   background:radial-gradient(circle,rgba(108,43,255,.5),transparent 68%);opacity:0;transition:opacity .5s;pointer-events:none}
@@ -232,7 +262,11 @@ input:focus{outline:none;border-color:var(--core);box-shadow:0 0 0 4px rgba(108,
 .ok{display:none;text-align:center;padding:20px 0}.ok.on{display:block}
 .ok svg{width:64px;height:64px;margin-bottom:20px;stroke:var(--core)}
 .trust{list-style:none;padding:0;margin:32px 0 0;display:flex;flex-direction:column;gap:14px}
-.trust li{display:flex;gap:8px;font-size:14px;color:rgba(246,245,242,.7)}
+/* Era flex con el <b> como primera columna. Con los titulillos nuevos, mas
+   largos, el bloque quedaba a dos columnas desiguales. En linea corrida el
+   texto fluye y el <b> sigue marcando el arranque de cada punto. */
+.trust li{font-size:14px;line-height:1.6;color:rgba(246,245,242,.7);max-width:52ch}
+.trust b{margin-right:4px}
 .trust b{color:var(--bone);font-weight:500}
 
 footer{background:var(--studio);border-top:1px solid rgba(255,255,255,.07);padding-block:64px 32px;position:relative;z-index:2}
@@ -390,3 +424,58 @@ button.play{padding:0;font-family:inherit;color:inherit}
    compensa el ancho de la barra de desplazamiento que desaparece al ocultarla,
    que si no la pagina da un salto lateral al abrir. */
 body.visor-abierto{overflow:hidden}
+
+/* ── BLOQUE 02 · Agencia tradicional frente al ecosistema ───────────────────
+   Dos columnas enfrentadas, no dos tarjetas: el borde entre ellas es el que
+   hace la comparacion, asi que la caja es una sola y las filas se separan con
+   linea de un pixel. En movil se apila y cada celda recupera su rotulo, que si
+   no se pierde de que lado esta cada cosa. */
+#problema{background:var(--bg);z-index:2}
+.vs{margin-top:56px;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}
+.vs-cab{display:grid;grid-template-columns:1fr 1fr;background:var(--studio)}
+.vs-cab span{padding:16px 24px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--graphite)}
+.vs-cab span+span{border-left:1px solid rgba(255,255,255,.08)}
+.vs-acc{color:var(--surge)!important}
+.vs-fila{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(255,255,255,.08)}
+.vs-fila>div{padding:22px 24px;font-size:14px;line-height:1.6;color:rgba(246,245,242,.7)}
+.vs-fila>div+div{border-left:1px solid rgba(255,255,255,.08)}
+.vs-a b{display:block;color:var(--ash);font-weight:500;margin-bottom:4px}
+.vs-b{background:rgba(108,43,255,.05)}
+.vs-b b{display:block;color:var(--bone);font-weight:500;margin-bottom:4px}
+@media(max-width:820px){
+  .vs-cab{display:none}
+  .vs-fila{grid-template-columns:1fr}
+  .vs-fila>div+div{border-left:0;border-top:1px solid rgba(255,255,255,.08)}
+  .vs-fila>div::before{content:attr(data-l);display:block;font-family:var(--mono);font-size:9px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--graphite);margin-bottom:10px}
+  .vs-b::before{color:var(--surge)!important}
+}
+
+/* ── BLOQUE 05 · Modalidades de contratacion ────────────────────────────────
+   Tres tarjetas. Solo la tercera lleva borde de acento y fondo: es la modalidad
+   integral, y el documento de copy tambien la destaca. Gastar el borde en las
+   tres las igualaria y no diria nada. */
+#modalidades{background:var(--bg);z-index:2}
+.planes{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gut);margin-top:56px}
+@media(max-width:980px){.planes{grid-template-columns:1fr}}
+.plan{display:flex;flex-direction:column;gap:22px;background:var(--studio);
+  border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:32px;
+  transition:border-color .4s,transform .4s}
+.plan:hover{border-color:rgba(164,124,255,.45);transform:translateY(-4px)}
+.plan-t .mono{color:var(--graphite)}
+.plan-t h3{margin-top:10px;font-size:clamp(21px,2vw,26px);letter-spacing:-.02em}
+.plan-b{border-top:1px solid rgba(255,255,255,.08);padding-top:16px}
+.plan-b .mono{display:block;color:var(--surge);margin-bottom:8px}
+.plan-b p{font-size:14px;line-height:1.6;color:rgba(246,245,242,.7)}
+.plan-b p b{color:var(--bone);font-weight:500}
+.plan-alto{background:var(--void);border-color:rgba(164,124,255,.45)}
+.plan-alto .plan-t h3{color:var(--mist)}
+/* --void es mas claro que --studio: el gris apagado se queda en 4,36:1 encima.
+   En esta tarjeta el rotulo sube a --ash, que da 6,5:1. */
+.plan-alto .plan-t .mono{color:var(--ash)}
+.plan-alto:hover{border-color:var(--surge)}
+
+/* El cierre viene detras de modalidades y las dos usan el mismo fondo: sin la
+   linea, las dos secciones se leerian como una sola. */
+#auditoria{border-top:1px solid rgba(255,255,255,.07)}

@@ -9,6 +9,7 @@ const PAL = {
   bg:       [0x08, 0x08, 0x0C],   // --bg      onyx
   studio:   [0x10, 0x10, 0x18],   // --studio
   rig:      [0x1A, 0x1A, 0x24],   // --rig
+  void_:    [0x1B, 0x07, 0x40],   // --void  (fondo de la modalidad destacada)
   bone:     [0xF6, 0xF5, 0xF2],   // --bone
   ash:      [0x9A, 0x9A, 0xAA],   // --ash
   graphite: [0x7B, 0x7B, 0x85],   // --graphite
@@ -56,6 +57,17 @@ const CASOS = [
   ['.ck-t (aviso medicion)',  PAL.ash, 1,     PAL.studio, 13, false, true],
   ['.ck-t a (enlace)',        PAL.surge, 1,   PAL.studio, 13, false, true],
   ['.ck .btn (aceptar/rechazar)', PAL.bone, 1, PAL.studio, 13, false, true],
+  ['.vs-a (columna izquierda)', PAL.bone, 0.70, PAL.bg,     14, false, true],
+  ['.vs-a b (titulillo)',      PAL.ash, 1,     PAL.bg,      14, false, true],
+  ['.vs-b (columna derecha)',  PAL.bone, 0.70, PAL.bg,     14, false, true],
+  ['.vs-cab (rotulo)',         PAL.graphite, 1, PAL.studio, 10, false, false],
+  ['.vs-acc (rotulo derecho)', PAL.surge, 1,   PAL.studio, 10, false, false],
+  ['.plan-b p',                PAL.bone, 0.70, PAL.studio, 14, false, true],
+  ['.plan-alto .plan-b p',     PAL.bone, 0.70, PAL.void_,  14, false, true],
+  ['.plan-alto .mono surge',   PAL.surge, 1,   PAL.void_,  10, false, false],
+  ['.plan-alto .plan-t .mono', PAL.ash, 1,      PAL.void_,  10, false, false],
+  ['.plan-alto h3 (mist)',     PAL.mist, 1,    PAL.void_,  24, false, true],
+  ['.ent li b / .vs b (bone)', PAL.bone, 1,    PAL.bg,      14, false, true],
 ];
 
 // WCAG: 3:1 basta para texto grande (>=24px, o >=18.66px en negrita)
