@@ -115,11 +115,15 @@ function pintar(){
   caja.id = 'ck';
   caja.setAttribute('role', 'region');
   caja.setAttribute('aria-label', 'Aviso de medición');
-  // MARCADOR · PENDIENTE. Texto del aviso de medicion, a redactar por abogado
-  // junto con el apartado correspondiente de privacidad.html.
+  // Texto definitivo. Dice las tres cosas que tiene que decir un aviso de este
+  // tipo para que el consentimiento sea informado: quien mide, que se mide y que
+  // pasa si dices que no. El detalle completo esta en el apartado 7 de
+  // privacidad.html; aqui va la version corta, que es la que se lee de verdad.
   caja.innerHTML =
-    '<p class="ck-t"><span class="pend">Texto pendiente de abogado</span>' +
-    'Medimos qué funciona en esta página. Nada se activa sin tu permiso. ' +
+    '<p class="ck-t">' +
+    'Este sitio <b>no usa cookies</b>. Si aceptas, medimos de forma anónima qué ' +
+    'secciones se usan, con Google Analytics. Si rechazas, no se carga nada. ' +
+    'En ningún caso se mide lo que escribes en el formulario. ' +
     '<a href="privacidad.html">Cómo tratamos tus datos</a>.</p>' +
     '<div class="ck-b">' +
       '<button type="button" class="btn btn-s" data-ck="no">Rechazar</button>' +

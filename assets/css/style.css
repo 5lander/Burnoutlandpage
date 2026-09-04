@@ -275,6 +275,18 @@ footer{background:var(--studio);border-top:1px solid rgba(255,255,255,.07);paddi
 .fbrand svg{width:34px;height:34px;stroke:var(--bone)}
 .fmeta{text-align:right;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--graphite);line-height:2.2}
 @media(max-width:640px){.fmeta{text-align:left}}
+/* El unico enlace del bloque: las otras tres lineas son datos, no destinos.
+   Hereda el gris de .fmeta, asi que no rompe el ritmo de la columna; solo se
+   delata al pasar por encima. */
+.fmeta a{color:var(--graphite);transition:color .3s}
+.fmeta a:hover{color:var(--surge)}
+/* Los dos documentos legales, en la fila inferior del pie. Es la unica via de
+   entrada a privacidad.html: antes solo se enlazaba desde la casilla de
+   consentimiento del formulario, o sea desde dentro del paso 3. */
+.flegal{display:flex;gap:20px}
+.flegal a{color:var(--graphite);transition:color .3s}
+.flegal a:hover{color:var(--surge)}
+.flegal a[aria-current]{color:var(--ash)}
 .devby{display:inline-flex;align-items:center;gap:6px;color:var(--graphite);transition:color .3s}
 .devby b{font-weight:500;color:var(--ash)}
 .devby:hover{color:var(--surge)}.devby:hover b{color:var(--surge)}
@@ -330,6 +342,19 @@ body.page main{padding-top:68px}
 .doc li{margin-bottom:8px}
 .aviso{border:1px dashed var(--ember);border-radius:12px;padding:20px 24px;margin-bottom:40px}
 .aviso p{margin:10px 0 0;font-size:14px}
+/* El cuerpo de .doc va al 72% de --bone. Una negrita a ese mismo tono no se
+   distingue del texto corriente, y en terminos.html casi cada parrafo abre con
+   el numero de clausula en negrita: sin subirla a --bone, la numeracion se
+   pierde y el documento se lee como un muro. */
+.doc b,.doc strong{color:var(--bone);font-weight:500}
+.doc a{color:var(--surge);text-decoration:underline;text-underline-offset:2px}
+.doc a:hover{color:var(--mist)}
+.doc a.btn{color:var(--bone);text-decoration:none}
+.doc a.btn:hover{color:var(--surge)}
+/* max-width:none porque el 62ch heredado de p esta calibrado para el cuerpo de
+   17px: a 11px y en monoespaciada parte esta linea en tres. */
+.doc-meta{font-family:var(--mono);font-size:11px;line-height:2;letter-spacing:.06em;
+  color:var(--ash);margin-top:24px;max-width:none}
 
 /* ── P4 · Accesibilidad ────────────────────────────────────────────────────
    Las cinco capas de la escena y las cuatro etiquetas se apagaban solo con

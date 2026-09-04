@@ -146,6 +146,9 @@ try{
   localStorage.clear();
   f = await cargar('../privacidad.html');
   R['8a_banner_privacidad_ms'] = await esperarBanner(f, 4000);
+  localStorage.clear();
+  f = await cargar('../terminos.html');
+  R['8b_banner_terminos_ms'] = await esperarBanner(f, 4000);
 
   R.ok = true;
 }catch(e){
