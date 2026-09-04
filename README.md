@@ -14,10 +14,14 @@ en el repositorio es exactamente lo que se sirve.
 > - **El formulario no envía.** `ENDPOINT` sigue en marcador: valida, muestra el
 >   payload y avisa en pantalla de que no está conectado. Ningún lead llega a
 >   ninguna parte.
-> - **No hay textos legales.** La política de privacidad son ocho apartados
->   marcados como pendientes, y el consentimiento del formulario y el aviso de
->   medición llevan una etiqueta naranja visible que dice *Texto pendiente de
->   abogado*.
+> - **Faltan tres datos de la empresa para cerrar lo legal.** Los textos ya
+>   están escritos: los términos y condiciones son los que entregó el cliente, y
+>   la política de privacidad, el consentimiento del formulario y el aviso de
+>   medición están redactados describiendo lo que el código hace de verdad.
+>   Lo único que queda en blanco son **tres datos que solo puede aportar
+>   BURNOUT** —razón social + RUC + domicilio, plazo de conservación, y dónde se
+>   aloja n8n—, marcados en naranja dentro de `privacidad.html`. Ver
+>   [Datos que faltan](#datos-que-faltan).
 > - **No hay medición.** `MEDICION_ID` sigue en marcador: el aviso de cookies
 >   funciona y los eventos se registran en memoria, pero no se carga ninguna
 >   herramienta y no sale ninguna petición.
@@ -89,6 +93,7 @@ El detalle de cada herramienta está en [`tools/LEEME.md`](tools/LEEME.md).
 | `index.html` | La página. Markup, metadatos, Open Graph y JSON-LD. |
 | `gracias.html` | Confirmación tras enviar el formulario. `noindex`. Es la que mide la conversión. |
 | `privacidad.html` | Política de privacidad. `noindex`. Contenido pendiente de abogado. |
+| `terminos.html` | Términos y condiciones. `noindex`. **Contenido definitivo**, el del documento del cliente. |
 | `assets/css/style.css` | Toda la hoja de estilos, incluidas las 12 declaraciones `@font-face`. |
 | `assets/js/scene.js` | Escena de partículas del canvas. Fases, easings y umbrales calibrados: **no se tocan**. |
 | `assets/js/app.js` | Preloader, apariciones al hacer scroll y el formulario de tres pasos. |
@@ -115,11 +120,11 @@ clona la rama y copia los archivos tal cual.
 > viejo junto al HTML nuevo, y ve la página descolocada durante un año. Pasó de
 > verdad con el despliegue del copy nuevo.
 >
-> La huella es el `?v=` de los enlaces. **Súbelo en las tres páginas a la vez:**
+> La huella es el `?v=` de los enlaces. **Súbelo en las cuatro páginas a la vez:**
 >
 > ```bash
-> grep -rn "?v=" index.html gracias.html privacidad.html     # ver el valor actual
-> sed -i 's/?v=20260903/?v=20260910/g' index.html gracias.html privacidad.html
+> grep -rn "?v=" index.html gracias.html privacidad.html terminos.html
+> sed -i 's/?v=20260904/?v=20260910/g' index.html gracias.html privacidad.html terminos.html
 > ```
 >
 > Van con huella: `style.css`, `scene.js`, `app.js`, `medicion.js` y el
@@ -323,7 +328,8 @@ Debe seguir diciendo `Disallow: /` mientras el sitio no sea lanzable.
 
 **13 · Consola limpia**
 
-Cero errores en las tres páginas: `/`, `/gracias.html` y `/privacidad.html`.
+Cero errores en las cuatro páginas: `/`, `/gracias.html`, `/privacidad.html` y
+`/terminos.html`.
 
 **14 · Anillo de foco** *(pendiente de verificación manual)*
 
@@ -344,24 +350,30 @@ Lo primero que hay que mirar antes de publicar. Todos son `grep`-ables por
 | URL del webhook de n8n | [`assets/js/app.js:42`](assets/js/app.js#L42) | El formulario valida y muestra el payload, pero no envía y lo dice en pantalla. |
 | WhatsApp de contacto | [`assets/js/app.js:47`](assets/js/app.js#L47) | No se ofrece la vía alternativa cuando falla el envío. |
 | ID de la propiedad de medición | [`assets/js/medicion.js:29`](assets/js/medicion.js#L29) | El aviso funciona y los eventos se registran en memoria, pero no se carga ninguna herramienta. |
+| Razón social, RUC y domicilio | [`privacidad.html`](privacidad.html), apartado 1 | La política no identifica al responsable del tratamiento, que es el dato que la LOPDP exige en primer lugar. |
+| Plazo de conservación de los leads | [`privacidad.html`](privacidad.html), apartado 4 | La política no dice cuánto se guardan los datos. Es una decisión de negocio, no jurídica. |
+| n8n: ¿nube o autoalojado, y en qué país? | [`privacidad.html`](privacidad.html), apartado 5 | No se puede declarar la transferencia internacional del proveedor que recibe el formulario. |
 
-### Textos que redacta el abogado
+### Textos legales
 
-| Qué | Dónde |
-|---|---|
-| Consentimiento del formulario | [`index.html:274`](index.html#L274) |
-| Texto del aviso de medición | [`assets/js/medicion.js:121`](assets/js/medicion.js#L121) |
-| Política de privacidad, cabecera | [`privacidad.html:40`](privacidad.html#L40) |
-| 1 · Responsable | [`privacidad.html:51`](privacidad.html#L51) |
-| 2 · Datos que se recogen | [`privacidad.html:55`](privacidad.html#L55) |
-| 3 · Finalidad | [`privacidad.html:60`](privacidad.html#L60) |
-| 4 · Plazo de conservación | [`privacidad.html:65`](privacidad.html#L65) |
-| 5 · Encargados de tratamiento | [`privacidad.html:68`](privacidad.html#L68) |
-| 6 · Derechos | [`privacidad.html:73`](privacidad.html#L73) |
-| 7 · Cookies y medición | [`privacidad.html:77`](privacidad.html#L77) |
-| 8 · Cambios en la política | [`privacidad.html:86`](privacidad.html#L86) |
+**Ya están escritos los tres.** No queda ningún marcador *Texto pendiente de
+abogado* en el sitio.
 
-Los tres primeros salen en pantalla con una etiqueta naranja visible, a
+| Texto | Dónde | Estado |
+|---|---|---|
+| Términos y condiciones | [`terminos.html`](terminos.html) | Definitivo. Los doce apartados del documento del cliente. |
+| Política de privacidad | [`privacidad.html`](privacidad.html) | Redactada. Le faltan los tres datos de empresa de la tabla de arriba. |
+| Consentimiento del formulario | [`index.html`](index.html) | Definitivo. Nombra los datos y la finalidad, y dice cómo revocar. |
+| Aviso de medición | [`assets/js/medicion.js`](assets/js/medicion.js) | Definitivo. Dice que no hay cookies, qué se mide y qué pasa al rechazar. |
+
+La política se redactó **leyendo el código**, no copiando una plantilla: los
+campos del apartado 2 son los del payload real de
+[`app.js:285`](assets/js/app.js#L285), y las claves y eventos del apartado 7 son
+los que de verdad usa [`medicion.js`](assets/js/medicion.js). **Si cambia el
+formulario o la medición, hay que volver a esos dos apartados**, o la política
+pasa a decir algo falso.
+
+Los tres huecos que quedan salen en pantalla con una etiqueta naranja visible, a
 propósito: es imposible publicarlos por descuido sin verlos.
 
 ### Contenido de relleno
@@ -383,15 +395,20 @@ En orden. Los cinco primeros son bloqueantes.
       `<meta name="robots" content="noindex, nofollow">` (y el comentario de
       encima). Está justo antes del `canonical`.
 
-   Las otras dos páginas llevan `noindex, follow` a propósito y **se quedan
-   como están**: `gracias.html` y `privacidad.html` no deben salir en
-   buscadores ni antes ni después de publicar.
+   Las otras tres páginas llevan `noindex, follow` a propósito y **se quedan
+   como están**: `gracias.html`, `privacidad.html` y `terminos.html` no deben
+   salir en buscadores ni antes ni después de publicar. En el caso de
+   `terminos.html` es una decisión revisable —su contenido sí es definitivo y un
+   documento legal indexado no hace daño—, pero mientras la portada esté
+   bloqueada no gana nada estando dentro.
 2. **Conectar el `ENDPOINT`** y probar un envío real de punta a punta, hasta ver
    el lead en n8n y aterrizar en `gracias.html`. El webhook tiene que responder
    con `Access-Control-Allow-Origin: https://burnout.ec` o el navegador
    bloqueará la petición.
-3. **Poner los textos legales.** Los tres marcadores visibles y los ocho
-   apartados de la política.
+3. **Rellenar los tres huecos de `privacidad.html`** y quitar sus etiquetas
+   naranjas, incluida la del recuadro de aviso de arriba del todo. Son datos,
+   no redacción: razón social + RUC + domicilio, plazo de conservación y dónde
+   se aloja n8n. Los textos legales ya están escritos y no hay que tocarlos.
 4. **Poner el teléfono** en el pie de las tres páginas, si va a haberlo. Hoy
    no hay línea de teléfono: se quitó el número de relleno, porque publicar un
    número inventado es peor que publicar una línea de menos.
@@ -566,6 +583,16 @@ y es una decisión, no un olvido:
 `areaServed` (Quito, Loja, Ecuador) se conservó dentro de `Organization`, así
 que la señal geográfica no se pierde.
 
+`sameAs` declara la cuenta de Instagram
+([`@burnout.ec`](https://www.instagram.com/burnout.ec/)), que es lo que le dice
+a Google que esa cuenta y el sitio son la misma entidad. **Se añadió a la vez
+que el enlace del pie, y los dos van juntos**: por la regla de arriba, un
+`sameAs` que apunte a un perfil que no aparece en ninguna página sería
+justamente el tipo de declaración que este bloque evita. Si algún día se quita
+el enlace del pie, hay que quitar también el `sameAs`. Lo mismo al revés: para
+añadir TikTok o cualquier otra red, primero el enlace visible, después la
+entrada en `sameAs`.
+
 Cuando llegue la dirección, se recupera añadiendo este nodo al `@graph`, después
 del de `Organization`:
 
@@ -604,7 +631,24 @@ Valen para cualquiera que siga trabajando aquí.
 1. **No se rediseña.** El resultado debe verse idéntico al prototipo aprobado en
    1440, 768 y 390 px. Cualquier diferencia visual es un error, no una mejora.
    Las únicas excepciones autorizadas hasta hoy son la reducción de partículas
-   en equipos de pocos núcleos y las dos correcciones de contraste.
+   en equipos de pocos núcleos, las dos correcciones de contraste, la fila de
+   enlaces legales del pie (`.flegal`), que se añadió porque sin ella
+   `terminos.html` no era alcanzable desde ninguna página y `privacidad.html`
+   solo se enlazaba desde dentro del paso 3 del formulario, y el enlace de
+   Instagram del bloque `.fmeta`, que hereda el mismo gris que las otras tres
+   líneas y solo se delata al pasar por encima.
+
+   Aparte va una **corrección**, que no es rediseño: `gracias.html` y
+   `privacidad.html` abrían `<svg><defs>` para el isotipo y no lo cerraban
+   nunca. El analizador de HTML no saca `<header>` del contenido SVG —no está
+   en la lista de elementos que rompen el modo extranjero, aunque `<div>` sí—,
+   así que el `<header>` de esas dos páginas acababa dentro del `<svg>` de
+   0×0 px, en el espacio de nombres SVG, y su `<div class="wrap nav">` salía
+   despedido al `<body>` como un bloque suelto: la barra fija, con su desenfoque
+   y su borde, no llegaba a existir. Al añadir `</defs></svg>` las dos páginas
+   pasan a verse como siempre debieron. `index.html` nunca tuvo el fallo.
+   Comprobable con `parse5`: `header` debe salir en el espacio de nombres
+   `xhtml` y colgando de `body`, no de `svg > defs`.
 2. **No se toca el path del isotipo** (`<path id="iso">` ni el del preloader). Es
    el archivo maestro de la marca: no se redibuja, no se simplifica y no pasa
    por ningún optimizador que altere las curvas.

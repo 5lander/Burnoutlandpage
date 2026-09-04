@@ -68,6 +68,11 @@ const CASOS = [
   ['.plan-alto .plan-t .mono', PAL.ash, 1,      PAL.void_,  10, false, false],
   ['.plan-alto h3 (mist)',     PAL.mist, 1,    PAL.void_,  24, false, true],
   ['.ent li b / .vs b (bone)', PAL.bone, 1,    PAL.bg,      14, false, true],
+  ['.flegal a (pie)',           PAL.graphite, 1, PAL.studio, 11, false, false],
+  ['.flegal a[aria-current]',   PAL.ash, 1,     PAL.studio, 11, false, false],
+  ['.doc b (clausulas)',        PAL.bone, 1,    PAL.bg,     16, false, true],
+  ['.doc a (enlace legal)',     PAL.surge, 1,   PAL.bg,     16, false, true],
+  ['.doc-meta (vigencia)',      PAL.ash, 1,     PAL.bg,     11, false, false],
 ];
 
 // WCAG: 3:1 basta para texto grande (>=24px, o >=18.66px en negrita)
