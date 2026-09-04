@@ -108,6 +108,27 @@ El detalle de cada herramienta está en [`tools/LEEME.md`](tools/LEEME.md).
 Integración Git de Hostinger apuntando a `public_html`. No hay build: Hostinger
 clona la rama y copia los archivos tal cual.
 
+> ### ⚠️ Antes de cada push que toque CSS o JS: sube el `?v=`
+>
+> `.htaccess` cachea CSS y JS **un año**, y estos archivos siempre se llaman
+> igual. Sin huella de versión, quien ya visitó el sitio sigue recibiendo el CSS
+> viejo junto al HTML nuevo, y ve la página descolocada durante un año. Pasó de
+> verdad con el despliegue del copy nuevo.
+>
+> La huella es el `?v=` de los enlaces. **Súbelo en las tres páginas a la vez:**
+>
+> ```bash
+> grep -rn "?v=" index.html gracias.html privacidad.html     # ver el valor actual
+> sed -i 's/?v=20260903/?v=20260910/g' index.html gracias.html privacidad.html
+> ```
+>
+> Van con huella: `style.css`, `scene.js`, `app.js`, `medicion.js` y el
+> `preload` de `app.js`, que tiene que llevar **exactamente la misma** que su
+> `<script>` o el navegador se lo descarga dos veces.
+>
+> Las fuentes, imágenes y vídeos no la llevan: esos sí se renombran cuando
+> cambian.
+
 1. Sube el repositorio a GitHub y comprueba que `main` está al día.
 2. En hPanel, dominio → **Avanzado → GIT** (el panel puede llamarlo *Git
    Deployment*).

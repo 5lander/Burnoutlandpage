@@ -18,7 +18,12 @@
 <link rel="preload" href="assets/fonts/poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-500-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css">
+<!-- ?v= es la huella de version. El .htaccess cachea CSS y JS un ano, y estos
+     archivos siempre se llaman igual: sin la huella, quien ya visito el sitio
+     sigue viendo el CSS viejo con el HTML nuevo hasta dentro de un ano.
+     SUBIR ESTE NUMERO EN CADA DESPLIEGUE QUE TOQUE CSS O JS, en las tres
+     paginas a la vez. Ver el README, "Despliegue". -->
+<link rel="stylesheet" href="assets/css/style.css?v=20260903">
 </head>
 <body class="page" data-conversion>
 
@@ -74,6 +79,6 @@
 </footer>
 
 
-<script src="assets/js/medicion.js"></script>
+<script src="assets/js/medicion.js?v=20260903"></script>
 </body>
 </html>
