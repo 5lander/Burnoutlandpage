@@ -49,13 +49,13 @@
 <link rel="preload" href="assets/fonts/poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-500-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/js/app.js?v=20260904" as="script">
+<link rel="preload" href="assets/js/app.js?v=20260908" as="script">
 <!-- ?v= es la huella de version. El .htaccess cachea CSS y JS un ano, y estos
      archivos siempre se llaman igual: sin la huella, quien ya visito el sitio
      sigue viendo el CSS viejo con el HTML nuevo hasta dentro de un ano.
      SUBIR ESTE NUMERO EN CADA DESPLIEGUE QUE TOQUE CSS O JS, en las cuatro
      paginas a la vez. Ver el README, "Despliegue". -->
-<link rel="stylesheet" href="assets/css/style.css?v=20260904">
+<link rel="stylesheet" href="assets/css/style.css?v=20260908">
 
 <!--
   Datos estructurados. Solo se declara lo que ya aparece en la pagina.
@@ -399,19 +399,21 @@
       </div>
       <div class="ok"><svg viewBox="0 0 1000 1000" aria-hidden="true"><use href="#iso"/></svg>
         <h3 style="font-size:24px;margin-bottom:12px">Recibido. Te escribimos por WhatsApp.</h3>
-        <p style="margin:0 auto;font-size:14px">En producción esto abre el calendario. Payload hacia n8n:</p></div>
-      <div class="payload" id="payload">{
-  <b>"event"</b>: "lead.audit_requested",
-  <b>"timestamp"</b>: "—",
-  <b>"data"</b>: {
-    <b>"full_name"</b>: "—",
-    <b>"company_brand"</b>: "—",
-    <b>"social_or_web"</b>: "—",
-    <b>"main_challenge"</b>: "—",
-    <b>"whatsapp_phone"</b>: "—",
-    <b>"source_campaign"</b>: "landing_organico"
-  }
-}</div>
+        <p style="margin:0 auto;font-size:14px">Revisamos tus canales antes de la llamada. Te contactamos en menos de 24&nbsp;horas hábiles.</p></div>
+      <!-- Resumen de lo enviado. Antes aqui se pintaba el JSON crudo del POST:
+           util para quien monta el flujo en n8n, ruido ilegible para quien
+           rellena el formulario. Ahora son etiquetas y valores, y aparece solo
+           despues de pulsar Enviar. El objeto real se sigue viendo en la consola. -->
+      <div class="resumen" id="resumen">
+        <span class="mono">Esto es lo que nos enviaste</span>
+        <dl>
+          <div><dt>Nombre</dt><dd id="r-nombre">—</dd></div>
+          <div><dt>Marca o empresa</dt><dd id="r-marca">—</dd></div>
+          <div><dt>Perfil o web</dt><dd id="r-perfil">—</dd></div>
+          <div><dt>Desafío</dt><dd id="r-reto">—</dd></div>
+          <div><dt>WhatsApp</dt><dd id="r-tel">—</dd></div>
+        </dl>
+      </div>
     </div>
   </div>
 </section>
@@ -458,8 +460,8 @@
   </div>
 </dialog>
 
-<script src="assets/js/medicion.js?v=20260904"></script>
-<script src="assets/js/scene.js?v=20260904"></script>
-<script src="assets/js/app.js?v=20260904"></script>
+<script src="assets/js/medicion.js?v=20260908"></script>
+<script src="assets/js/scene.js?v=20260908"></script>
+<script src="assets/js/app.js?v=20260908"></script>
 </body>
 </html>

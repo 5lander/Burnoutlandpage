@@ -140,7 +140,7 @@ var visorAbierto = false;
 
 // MARCADOR · PENDIENTE. URL del webhook de n8n que recibe el lead.
 // Sustituir por la URL real antes de publicar. Mientras el valor siga sin
-// empezar por http, el formulario valida y muestra el payload pero no envia,
+// empezar por http, el formulario valida y muestra el resumen pero no envia,
 // y lo dice en pantalla en vez de fallar en silencio.
 // El webhook debe responder con cabecera Access-Control-Allow-Origin para
 // https://burnout.ec, o el navegador bloqueara la peticion.
@@ -166,7 +166,7 @@ var hayEndpoint = /^https?:\/\//i.test(ENDPOINT);
 var hayWhatsapp = /^\d{8,15}$/.test(WHATSAPP);
 
 var panes=[].slice.call(document.querySelectorAll('.pane')), dots=[].slice.call(document.querySelectorAll('.steps i')),
-    ok=document.querySelector('.ok'), step=0, challenge='—';
+    ok=document.querySelector('.ok'), step=0, challenge='—', challengeLabel='—';
 function show(n){panes.forEach(function(p,i){p.classList.toggle('on',i===n)});dots.forEach(function(d,i){d.classList.toggle('on',i<=n)});step=n}
 // Al cambiar de paso, el boton que se acaba de pulsar desaparece con display:none
 // y el foco se cae al body: con teclado se pierde el hilo. Se lleva al primer
@@ -183,9 +183,11 @@ document.querySelectorAll('[data-next]').forEach(function(b){b.onclick=function(
 document.querySelectorAll('[data-prev]').forEach(function(b){b.onclick=function(){show(step-1);foco(step)}});
 document.querySelectorAll('.chip').forEach(function(c){c.onclick=function(){
   document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('sel');x.setAttribute('aria-pressed','false')});
-  c.classList.add('sel'); c.setAttribute('aria-pressed','true'); challenge=c.dataset.val; limpiar('e-reto');
+  c.classList.add('sel'); c.setAttribute('aria-pressed','true');
+  challenge=c.dataset.val;                 // valor interno que viaja a n8n
+  challengeLabel=c.textContent.trim();     // texto que ve la persona, para el resumen
+  limpiar('e-reto');
 }});
-function esc(s){return (s||'').replace(/[<>&"]/g,function(m){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[m]})}
 
 // --- errores por campo ---
 function marcar(idError, idCampo, mensaje){
@@ -297,11 +299,29 @@ function construirPayload(){
     }
   };
 }
-// El bloque de pantalla muestra el mismo objeto, con una sola licencia: pinta un
-// guion donde el POST lleva cadena vacia, para que el hueco se vea.
-function pintarPayload(p){
-  var d=p.data, g=function(x){ return esc(x) || '—'; };
-  document.getElementById('payload').innerHTML='{\n  <b>"event"</b>: "'+g(p.event)+'",\n  <b>"timestamp"</b>: "'+g(p.timestamp)+'",\n  <b>"data"</b>: {\n    <b>"full_name"</b>: "'+g(d.full_name)+'",\n    <b>"company_brand"</b>: "'+g(d.company_brand)+'",\n    <b>"social_or_web"</b>: "'+g(d.social_or_web)+'",\n    <b>"main_challenge"</b>: "'+g(d.main_challenge)+'",\n    <b>"whatsapp_phone"</b>: "'+g(d.whatsapp_phone)+'",\n    <b>"source_campaign"</b>: "'+g(d.source_campaign)+'"\n  }\n}';
+// Resumen en pantalla. Antes se pintaba aqui el JSON del POST tal cual: sirve
+// para revisar el flujo, pero a quien rellena el formulario le dice poco y le
+// deja la impresion de estar viendo una pagina a medio hacer. Ahora se muestran
+// etiquetas y valores, y los opcionales vacios se ocultan en vez de pintar un
+// guion. El objeto real que viaja en el POST se sigue viendo en la consola.
+function pintarResumen(p){
+  var d=p.data;
+  var filas={
+    'r-nombre': d.full_name,
+    'r-marca':  d.company_brand,
+    'r-perfil': d.social_or_web,
+    'r-reto':   challengeLabel==='—' ? '' : challengeLabel,
+    'r-tel':    d.whatsapp_phone
+  };
+  Object.keys(filas).forEach(function(id){
+    var dd=document.getElementById(id); if(!dd) return;
+    var v=filas[id];
+    dd.textContent = v || '—';
+    if(dd.parentNode) dd.parentNode.hidden = !v;   // fila vacia, fila fuera
+  });
+  var caja=document.getElementById('resumen');
+  if(caja) caja.classList.add('on');
+  if(window.console && console.info) console.info('[BURNOUT] payload del lead:', p);
 }
 
 // --- envio ---
@@ -329,10 +349,11 @@ document.querySelector('[data-send]').onclick=function(){
   }
 
   var payload=construirPayload();
-  pintarPayload(payload);                                // visible antes de enviar
+  pintarResumen(payload);                                // visible antes de enviar
 
   if(!hayEndpoint){
-    estado('El formulario todavía no tiene conectado su destino: falta configurar la constante <b>ENDPOINT</b> en assets/js/app.js. Tus datos no se han enviado.'+viaWhatsapp(), true);
+    if(window.console && console.warn) console.warn('[BURNOUT] falta configurar ENDPOINT en assets/js/app.js: no se ha enviado nada.');
+    estado('Todavía no podemos recibir solicitudes desde este formulario. Escríbenos a <a href="mailto:hola@burnout.ec">hola@burnout.ec</a> con estos datos y te agendamos la sesión igual.'+viaWhatsapp(), true);
     return;
   }
 
@@ -358,15 +379,18 @@ document.querySelector('[data-send]').onclick=function(){
   })['catch'](function(err){
     clearTimeout(corte);
     bloquear(false);                                     // los datos siguen ahi: puede reintentar
+    // El codigo de estado interesa a quien mantiene la landing, no a quien la
+    // usa: va a la consola, y en pantalla queda que hacer a continuacion.
+    if(window.console && console.warn) console.warn('[BURNOUT] envio fallido:', err);
     var msg;
     if(err && err.tipo==='http'){
       msg = err.codigo>=500
-        ? 'El servidor respondió con un error interno (HTTP '+err.codigo+'). No es culpa tuya. Espera un momento y pulsa Enviar otra vez.'
-        : 'El servidor rechazó el envío (HTTP '+err.codigo+'). Revisa que el WhatsApp esté bien escrito y vuelve a intentarlo.';
+        ? 'Algo falló de nuestro lado y no es culpa tuya. Espera un momento y pulsa Enviar otra vez.'
+        : 'No pudimos registrar tu solicitud. Revisa que el WhatsApp esté bien escrito y vuelve a intentarlo.';
     } else if(err && err.name==='AbortError'){
-      msg = 'El servidor tardó más de '+(TIMEOUT_MS/1000)+' segundos en responder. Tus datos siguen escritos: pulsa Enviar para reintentar.';
+      msg = 'La respuesta está tardando demasiado. Tus datos siguen escritos: pulsa Enviar para reintentar.';
     } else {
-      msg = 'No pudimos conectar con el servidor. Revisa tu conexión y pulsa Enviar otra vez. Tus datos siguen escritos.';
+      msg = 'No pudimos enviar tu solicitud. Revisa tu conexión y pulsa Enviar otra vez. Tus datos siguen escritos.';
     }
     estado(msg+viaWhatsapp(), true);
   });

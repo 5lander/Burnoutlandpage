@@ -256,9 +256,25 @@ input:focus{outline:none;border-color:var(--core);box-shadow:0 0 0 4px rgba(108,
 .chip.sel{border-color:var(--core);background:rgba(108,43,255,.14)}
 .fnav{display:flex;justify-content:space-between;align-items:center;margin-top:28px;gap:12px}
 .small{font-size:12px;color:var(--graphite);line-height:1.5}
-.payload{margin-top:24px;background:var(--bg);border:1px solid rgba(255,255,255,.08);border-radius:12px;
-  padding:20px;font-family:var(--mono);font-size:11.5px;color:var(--ash);white-space:pre-wrap;line-height:1.8}
-.payload b{color:var(--surge);font-weight:400}
+/* Resumen de lo enviado. Ocupa el sitio del antiguo volcado JSON: misma caja,
+   pero pares etiqueta/valor en vez de codigo. Nace oculto y lo abre app.js al
+   enviar; las filas opcionales vacias se marcan [hidden] y desaparecen. */
+.resumen{display:none;margin-top:24px;background:var(--bg);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:20px}
+.resumen.on{display:block}
+.resumen dl{margin:16px 0 0;display:flex;flex-direction:column;gap:12px}
+.resumen dl>div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.resumen dl>div[hidden]{display:none}
+.resumen dl>div:last-child{padding-bottom:0;border-bottom:none}
+.resumen dt{font-size:13px;color:var(--ash);flex:none}
+.resumen dd{margin:0;font-size:14px;color:var(--bone);text-align:right;word-break:break-word}
+/* En movil la fila a dos columnas parte los valores largos en tiras de dos
+   palabras; apiladas, cada valor se lee de corrido. */
+@media(max-width:520px){
+  .resumen dl>div{flex-direction:column;align-items:stretch;gap:3px}
+  .resumen dd{text-align:left}
+}
 .ok{display:none;text-align:center;padding:20px 0}.ok.on{display:block}
 .ok svg{width:64px;height:64px;margin-bottom:20px;stroke:var(--core)}
 .trust{list-style:none;padding:0;margin:32px 0 0;display:flex;flex-direction:column;gap:14px}
