@@ -111,6 +111,13 @@ header{position:fixed;top:0;left:0;right:0;z-index:60;backdrop-filter:blur(14px)
   opacity:0;transform:translateY(-100%);transition:.7s cubic-bezier(.6,0,.2,1)}
 header.in{opacity:1;transform:none}
 header.silent .nav-links,header.silent .brand{opacity:0!important;pointer-events:none}
+/* Con teclado, el foco caia en enlaces invisibles (la barra entra con la
+   escena). Si algo de la barra tiene el foco, se muestra entera. Con raton no
+   cambia nada: :focus-visible no salta al hacer clic. */
+header:has(:focus-visible){opacity:1;transform:none}
+header:has(:focus-visible) .brand,
+header.silent:has(:focus-visible) .nav-links,
+header.silent:has(:focus-visible) .brand{opacity:1!important;pointer-events:auto}
 .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
 .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em;font-size:17px}
 .brand{opacity:0;transition:opacity .35s ease}
@@ -233,6 +240,8 @@ header.silent .nav-links,header.silent .brand{opacity:0!important;pointer-events
 .play{position:absolute;top:24px;right:24px;width:40px;height:40px;border-radius:50%;
   border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;z-index:2;transition:.35s}
 .tile:hover .play{background:var(--core);border-color:var(--core)}
+/* Las tarjetas que aun no tienen pieza no se abren: sin mano al pasar. */
+.tile:not([data-full]){cursor:default}
 /* Pieza destacada: la del reel real ocupa dos columnas y dos filas, y las otras
    dos tarjetas se apilan a su derecha. Dos filas de 4:5 mas el gap dan casi el
    mismo 4:5 al doble de ancho, asi que el recorte del video no cambia. En una
