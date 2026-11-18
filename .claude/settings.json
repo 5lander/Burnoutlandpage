@@ -1,0 +1,6 @@
+{
+  "extraKnownMarketplaces": {
+    "noctis-org": { "source": { "source": "github", "repo": "5lander/noctis-org" } }
+  },
+  "enabledPlugins": { "noctis@noctis-org": true }
+}
