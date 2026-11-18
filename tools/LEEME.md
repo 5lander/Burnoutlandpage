@@ -5,6 +5,8 @@ el acceso a este directorio en producción.
 
 | Archivo | Qué hace |
 |---|---|
+| `verificar-paginas.js` | **Correr antes de cada push.** Comprueba que el pie sea idéntico en las cuatro páginas, que todos los `?v=` coincidan, que el isotipo sea igual a `iso-path.txt` y que no falte ningún `</svg>`. Sale con código 1 si algo falla. |
+| `subir-version.js` | Sube el `?v=` de CSS y JS en las cuatro páginas a la vez (fecha de hoy, o el valor que se le pase) y corre `verificar-paginas.js`. |
 | `iso-path.txt` | El atributo `d` del `<path id="iso">`, copiado literal de `index.html`. Fuente única de los iconos y la imagen OG. |
 | `generar-imagenes.html` | Dibuja iconos e imagen OG en canvas, a partir del path y de Poppins 700 autoalojada. |
 | `generar-imagenes.js` | Ejecuta lo anterior en Chrome headless y escribe los archivos. También empaqueta `favicon.ico`. |

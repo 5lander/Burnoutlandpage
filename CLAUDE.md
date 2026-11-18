@@ -11,9 +11,9 @@ ADR: docs/noctis/adr/
 Plan: docs/noctis/plan.md
 Estado: docs/noctis/estado.md
 Decisiones: docs/noctis/decisiones.md
-Verificación: ninguna — sitio estático sin package.json, sin lint, sin typecheck y sin pruebas automáticas (hallazgo para el plan)
-Verificación rápida: ninguna
-Verificación extra: subir el `?v=` en las cuatro páginas a la vez — cada vez que cambie un CSS o JS (README.md) · `node tools/validar-jsonld.js index.html <schemaorg-current-https.jsonld>` — cuando cambie el JSON-LD
+Verificación: node tools/verificar-paginas.js (sitio estático sin package.json, lint ni pruebas: solo coherencia entre páginas)
+Verificación rápida: node tools/verificar-paginas.js
+Verificación extra: `node tools/subir-version.js` — cada vez que cambie un CSS o JS · `node tools/validar-jsonld.js index.html <schemaorg-current-https.jsonld>` — cuando cambie el JSON-LD
 CI: ninguno
 Rama base: main
 Plugin: C:\Projects\noctis-org

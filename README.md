@@ -120,12 +120,17 @@ clona la rama y copia los archivos tal cual.
 > viejo junto al HTML nuevo, y ve la página descolocada durante un año. Pasó de
 > verdad con el despliegue del copy nuevo.
 >
-> La huella es el `?v=` de los enlaces. **Súbelo en las cuatro páginas a la vez:**
+> La huella es el `?v=` de los enlaces. **Súbelo en las cuatro páginas a la vez**
+> con el script, que pone la fecha de hoy (o la letra siguiente si ya hubo un
+> cambio hoy) y después comprueba que las cuatro páginas sigan coherentes:
 >
 > ```bash
-> grep -rn "?v=" index.html gracias.html privacidad.html terminos.html
-> sed -i 's/?v=20260904/?v=20260910/g' index.html gracias.html privacidad.html terminos.html
+> node tools/subir-version.js
 > ```
+>
+> Antes de cada push, aunque no toques CSS ni JS: `node tools/verificar-paginas.js`
+> (pie idéntico, misma huella, isotipo igual a `tools/iso-path.txt`, `<svg>`
+> cerrados). Si falla, no se sube.
 >
 > Van con huella: `style.css`, `scene.js`, `app.js`, `medicion.js` y el
 > `preload` de `app.js`, que tiene que llevar **exactamente la misma** que su
@@ -564,8 +569,10 @@ sobre la que toque: añadir `v` a sus clases, poner `data-full` y
 `data-full-poster`, cambiar el `<div class="bgw"></div>` por el bloque `<video>`
 y el `<div class="play">` por el `<button class="play" data-visor>`. **No hay
 que tocar `app.js`**: el bucle y el visor recorren todas las tarjetas que lo
-declaren. Al terminar, pasar `tools/auditar-reel.html` y
-`tools/auditar-visor.html`.
+declaren (hasta el 2026-11-18 el bucle solo atendía al primer video; ya no).
+La clase `dest` es solo de la pieza destacada, que ocupa dos columnas y dos
+filas: no la copies a la tarjeta nueva. Al terminar, pasar
+`tools/auditar-reel.html` y `tools/auditar-visor.html`.
 
 ## Datos estructurados
 
