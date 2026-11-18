@@ -26,10 +26,17 @@ var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 })();
 
 // reveals
+// Sin IntersectionObserver (navegadores muy viejos) se muestra todo de una vez:
+// si esto lanzara un error se caeria el resto del archivo, formulario incluido.
+if(typeof IntersectionObserver !== 'function'){
+  document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in')});
+  document.querySelectorAll('#pipe .step').forEach(function(el){el.classList.add('on')});
+} else {
 var io = new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
 document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
 var pio = new IntersectionObserver(function(es){es.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('on')},i*140);pio.unobserve(e.target)}})},{threshold:.4});
 document.querySelectorAll('#pipe .step').forEach(function(el){pio.observe(el)});
+}
 
 // Compartido entre el bucle de la tarjeta y el visor: mientras el visor esta
 // abierto el bucle mudo no debe arrancar. Bloquear el desplazamiento del fondo
