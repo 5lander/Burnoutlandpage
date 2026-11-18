@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-EC">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BURNOUT — Agencia Creativa</title>
-<meta name="description" content="Producción cinematográfica in-house, desarrollo web y automatizaciones de cierre con IA en un solo ecosistema comercial. Sesión de diagnóstico gratuita.">
+<title>BURNOUT — Agencia creativa en Quito y Loja, Ecuador</title>
+<meta name="description" content="Agencia creativa en Quito y Loja: producción cinematográfica in-house, desarrollo web y automatizaciones de cierre con IA. Sesión de diagnóstico gratuita.">
 <!-- SE QUITA PARA PUBLICAR. Mientras el sitio no sea lanzable, esta linea
      impide que la portada se indexe. Es el punto 1 de "Antes de publicar" del
      README, junto con el Disallow de robots.txt: son dos cambios, no uno.
@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="BURNOUT">
 <meta property="og:locale" content="es_EC">
 <meta property="og:url" content="https://burnout.ec/">
-<meta property="og:title" content="BURNOUT — Agencia Creativa">
+<meta property="og:title" content="BURNOUT — Agencia creativa en Quito y Loja, Ecuador">
 <meta property="og:description" content="Diseñamos marcas que imponen autoridad. Construimos la tecnología que cierra las ventas. Un solo ecosistema comercial, no cuatro proveedores.">
 <meta property="og:image" content="https://burnout.ec/assets/img/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -35,7 +35,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BURNOUT — Agencia Creativa">
+<meta name="twitter:title" content="BURNOUT — Agencia creativa en Quito y Loja, Ecuador">
 <meta name="twitter:description" content="Diseñamos marcas que imponen autoridad. Construimos la tecnología que cierra las ventas. Un solo ecosistema comercial, no cuatro proveedores.">
 <meta name="twitter:image" content="https://burnout.ec/assets/img/og.jpg">
 <meta name="twitter:image:alt" content="Isotipo y logotipo de BURNOUT sobre fondo onyx, con la bajada Agencia creativa · Ecuador.">
@@ -79,10 +79,13 @@
       "@type": "Organization",
       "@id": "https://burnout.ec/#organizacion",
       "name": "BURNOUT",
+      "alternateName": "BURNOUT AGENCY",
       "url": "https://burnout.ec/",
       "email": "hola@burnout.ec",
-      "sameAs": ["https://www.instagram.com/burnout.ec/"],
-      "description": "Ecosistema comercial ecuatoriano: produccion audiovisual con estandar de cine, estrategia de demanda, desarrollo web y automatizaciones de cierre con inteligencia artificial.",
+      "sameAs": [
+        "https://www.instagram.com/burnout.ec/"
+      ],
+      "description": "Ecosistema comercial ecuatoriano: producción audiovisual con estándar de cine, estrategia de demanda, desarrollo web y automatizaciones de cierre con inteligencia artificial.",
       "logo": {
         "@type": "ImageObject",
         "url": "https://burnout.ec/assets/img/icono-512.png",
@@ -91,10 +94,88 @@
       },
       "image": "https://burnout.ec/assets/img/og.jpg",
       "areaServed": [
-        { "@type": "City", "name": "Quito" },
-        { "@type": "City", "name": "Loja" },
-        { "@type": "Country", "name": "Ecuador" }
-      ]
+        {
+          "@type": "City",
+          "name": "Quito"
+        },
+        {
+          "@type": "City",
+          "name": "Loja"
+        },
+        {
+          "@type": "Country",
+          "name": "Ecuador"
+        }
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "hola@burnout.ec",
+        "areaServed": "EC",
+        "availableLanguage": "es"
+      },
+      "knowsAbout": [
+        "Producción audiovisual",
+        "IA generativa",
+        "Pauta en Meta, Google y TikTok",
+        "Desarrollo web y landings",
+        "Chatbots con IA en WhatsApp e Instagram",
+        "Automatizaciones de CRM"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Los tres departamentos de especialización",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://burnout.ec/#film-studio",
+              "name": "Producción audiovisual high-end e IA generativa",
+              "description": "Elevamos la percepción visual de tu negocio para que cobrar precios altos sea natural.",
+              "provider": {
+                "@id": "https://burnout.ec/#organizacion"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "Ecuador"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://burnout.ec/#estrategia",
+              "name": "Captura y creación de demanda comercial",
+              "description": "Atraemos a clientes calificados con capacidad y urgencia real de compra.",
+              "provider": {
+                "@id": "https://burnout.ec/#organizacion"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "Ecuador"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://burnout.ec/#desarrollo",
+              "name": "Web persuasiva y cierre con IA",
+              "description": "La infraestructura técnica que convierte la atención en dinero en cuenta.",
+              "provider": {
+                "@id": "https://burnout.ec/#organizacion"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "Ecuador"
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "@type": "WebSite",
@@ -102,7 +183,23 @@
       "url": "https://burnout.ec/",
       "name": "BURNOUT",
       "inLanguage": "es-EC",
-      "publisher": { "@id": "https://burnout.ec/#organizacion" }
+      "publisher": {
+        "@id": "https://burnout.ec/#organizacion"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://burnout.ec/#portada",
+      "url": "https://burnout.ec/",
+      "name": "BURNOUT — Agencia creativa en Quito y Loja, Ecuador",
+      "isPartOf": {
+        "@id": "https://burnout.ec/#sitio"
+      },
+      "about": {
+        "@id": "https://burnout.ec/#organizacion"
+      },
+      "inLanguage": "es-EC",
+      "primaryImageOfPage": "https://burnout.ec/assets/img/og.jpg"
     }
   ]
 }

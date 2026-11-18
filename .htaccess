@@ -49,6 +49,10 @@ RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
 RewriteRule ^ https://%1%{REQUEST_URI} [L,NE,R=301]
 
+# llms.txt y robots.txt llevan tildes: sin charset el navegador los lee como
+# Latin-1 y «producción» sale como «producciÃ³n».
+AddCharset utf-8 .txt
+
 # ── Cache de estaticos ──────────────────────────────────────────────────────
 # Los nombres de archivo no llevan huella, asi que un ano solo es seguro
 # mientras el nombre no cambie. Al sustituir una fuente o un icono hay que
