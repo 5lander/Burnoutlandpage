@@ -111,6 +111,13 @@ header{position:fixed;top:0;left:0;right:0;z-index:60;backdrop-filter:blur(14px)
   opacity:0;transform:translateY(-100%);transition:.7s cubic-bezier(.6,0,.2,1)}
 header.in{opacity:1;transform:none}
 header.silent .nav-links,header.silent .brand{opacity:0!important;pointer-events:none}
+/* Con teclado, el foco caia en enlaces invisibles (la barra entra con la
+   escena). Si algo de la barra tiene el foco, se muestra entera. Con raton no
+   cambia nada: :focus-visible no salta al hacer clic. */
+header:has(:focus-visible){opacity:1;transform:none}
+header:has(:focus-visible) .brand,
+header.silent:has(:focus-visible) .nav-links,
+header.silent:has(:focus-visible) .brand{opacity:1!important;pointer-events:auto}
 .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
 .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em;font-size:17px}
 .brand{opacity:0;transition:opacity .35s ease}
@@ -119,7 +126,10 @@ header.silent .nav-links,header.silent .brand{opacity:0!important;pointer-events
 .nav-links{display:flex;gap:32px;align-items:center}
 .nav-links a{font-size:14px;color:rgba(246,245,242,.62);transition:color .25s}
 .nav-links a:hover{color:var(--bone)}
-@media(max-width:860px){.nav-links a:not(.btn){display:none}}
+@media(max-width:860px){.nav-links a:not(.btn):not(.ig){display:none}}
+/* Instagram en la barra: es la unica red de BURNOUT, y se queda visible tambien
+   en movil, donde los demas enlaces se esconden. */
+.nav-links a.ig{display:inline-flex;align-items:center;padding:6px;margin:-6px}
 
 /* ESCENA PIN */
 #scene{height:600vh;position:relative}
@@ -230,6 +240,21 @@ header.silent .nav-links,header.silent .brand{opacity:0!important;pointer-events
 .play{position:absolute;top:24px;right:24px;width:40px;height:40px;border-radius:50%;
   border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;z-index:2;transition:.35s}
 .tile:hover .play{background:var(--core);border-color:var(--core)}
+/* Las tarjetas que aun no tienen pieza no se abren: sin mano al pasar. */
+.tile:not([data-full]){cursor:default}
+/* Pieza destacada: la del reel real ocupa dos columnas y dos filas, y las otras
+   dos tarjetas se apilan a su derecha. Dos filas de 4:5 mas el gap dan casi el
+   mismo 4:5 al doble de ancho, asi que el recorte del video no cambia. En una
+   columna (<=880 px) vuelve a ser una tarjeta mas, a todo el ancho. */
+@media(min-width:881px){
+  .tile.dest{grid-column:span 2;grid-row:span 2;aspect-ratio:auto;padding:36px}
+  .tile.dest h4{font-size:clamp(24px,2.4vw,34px)}
+  .tile.dest .play{top:36px;right:36px;width:56px;height:56px}
+}
+.reel-ig{display:flex;justify-content:center;margin-top:40px}
+
+/* Texto solo para lectores de pantalla */
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* AUDITORÍA */
 #auditoria{background:var(--bg);z-index:2}
@@ -303,9 +328,18 @@ footer{background:var(--studio);border-top:1px solid rgba(255,255,255,.07);paddi
 .flegal a{color:var(--graphite);transition:color .3s}
 .flegal a:hover{color:var(--surge)}
 .flegal a[aria-current]{color:var(--ash)}
-.devby{display:inline-flex;align-items:center;gap:6px;color:var(--graphite);transition:color .3s}
-.devby b{font-weight:500;color:var(--ash)}
-.devby:hover{color:var(--surge)}.devby:hover b{color:var(--surge)}
+/* Pie «Powered by Noctis» con el lockup horizontal del Manual de Marca Noctis
+   v4.0 (kit-v4-0/01-noctis/svg/noctis-lockup-horizontal.svg, trazados sin tocar).
+   Va discreto, como en las landings de Noctis: 20 px de alto, en una sola
+   tinta y del mismo gris que el resto del pie, para que se integre en BURNOUT
+   en vez de competir con su marca. Decision de Lander del 2026-11-20: el
+   manual pide 32 px como minimo para el isotipo; aqui manda la integracion.
+   El texto deja la monoespaciada en mayusculas de la fila y usa Poppins en
+   minusculas, igual que el pie de las landings. */
+.devby{display:inline-flex;align-items:center;gap:10px;color:var(--graphite);transition:color .3s;
+  font-family:var(--sans);font-size:13px;font-weight:400;letter-spacing:0;text-transform:none}
+.devby svg{display:block;height:20px;width:auto;flex:none}
+.devby:hover{color:var(--bone)}
 .rule{height:1px;background:rgba(255,255,255,.07);margin:40px 0 20px}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,0,.1,1),transform .8s cubic-bezier(.2,0,.1,1)}
 .reveal.in{opacity:1;transform:none}

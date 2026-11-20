@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-EC">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BURNOUT — Agencia Creativa</title>
-<meta name="description" content="Producción cinematográfica in-house, desarrollo web y automatizaciones de cierre con IA en un solo ecosistema comercial. Sesión de diagnóstico gratuita.">
+<title>BURNOUT — Agencia creativa en Quito y Loja, Ecuador</title>
+<meta name="description" content="Agencia creativa en Quito y Loja: producción cinematográfica in-house, desarrollo web y automatizaciones de cierre con IA. Sesión de diagnóstico gratuita.">
 <!-- SE QUITA PARA PUBLICAR. Mientras el sitio no sea lanzable, esta linea
      impide que la portada se indexe. Es el punto 1 de "Antes de publicar" del
      README, junto con el Disallow de robots.txt: son dos cambios, no uno.
@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="BURNOUT">
 <meta property="og:locale" content="es_EC">
 <meta property="og:url" content="https://burnout.ec/">
-<meta property="og:title" content="BURNOUT — Agencia Creativa">
+<meta property="og:title" content="BURNOUT — Agencia creativa en Quito y Loja, Ecuador">
 <meta property="og:description" content="Diseñamos marcas que imponen autoridad. Construimos la tecnología que cierra las ventas. Un solo ecosistema comercial, no cuatro proveedores.">
 <meta property="og:image" content="https://burnout.ec/assets/img/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -35,7 +35,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BURNOUT — Agencia Creativa">
+<meta name="twitter:title" content="BURNOUT — Agencia creativa en Quito y Loja, Ecuador">
 <meta name="twitter:description" content="Diseñamos marcas que imponen autoridad. Construimos la tecnología que cierra las ventas. Un solo ecosistema comercial, no cuatro proveedores.">
 <meta name="twitter:image" content="https://burnout.ec/assets/img/og.jpg">
 <meta name="twitter:image:alt" content="Isotipo y logotipo de BURNOUT sobre fondo onyx, con la bajada Agencia creativa · Ecuador.">
@@ -49,13 +49,13 @@
 <link rel="preload" href="assets/fonts/poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-500-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/js/app.js?v=20260908" as="script">
+<link rel="preload" href="assets/js/app.js?v=20261120" as="script">
 <!-- ?v= es la huella de version. El .htaccess cachea CSS y JS un ano, y estos
      archivos siempre se llaman igual: sin la huella, quien ya visito el sitio
      sigue viendo el CSS viejo con el HTML nuevo hasta dentro de un ano.
      SUBIR ESTE NUMERO EN CADA DESPLIEGUE QUE TOQUE CSS O JS, en las cuatro
      paginas a la vez. Ver el README, "Despliegue". -->
-<link rel="stylesheet" href="assets/css/style.css?v=20260908">
+<link rel="stylesheet" href="assets/css/style.css?v=20261120">
 
 <!--
   Datos estructurados. Solo se declara lo que ya aparece en la pagina.
@@ -79,10 +79,13 @@
       "@type": "Organization",
       "@id": "https://burnout.ec/#organizacion",
       "name": "BURNOUT",
+      "alternateName": "BURNOUT AGENCY",
       "url": "https://burnout.ec/",
       "email": "hola@burnout.ec",
-      "sameAs": ["https://www.instagram.com/burnout.ec/"],
-      "description": "Ecosistema comercial ecuatoriano: produccion audiovisual con estandar de cine, estrategia de demanda, desarrollo web y automatizaciones de cierre con inteligencia artificial.",
+      "sameAs": [
+        "https://www.instagram.com/burnout.ec/"
+      ],
+      "description": "Ecosistema comercial ecuatoriano: producción audiovisual con estándar de cine, estrategia de demanda, desarrollo web y automatizaciones de cierre con inteligencia artificial.",
       "logo": {
         "@type": "ImageObject",
         "url": "https://burnout.ec/assets/img/icono-512.png",
@@ -91,10 +94,88 @@
       },
       "image": "https://burnout.ec/assets/img/og.jpg",
       "areaServed": [
-        { "@type": "City", "name": "Quito" },
-        { "@type": "City", "name": "Loja" },
-        { "@type": "Country", "name": "Ecuador" }
-      ]
+        {
+          "@type": "City",
+          "name": "Quito"
+        },
+        {
+          "@type": "City",
+          "name": "Loja"
+        },
+        {
+          "@type": "Country",
+          "name": "Ecuador"
+        }
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "hola@burnout.ec",
+        "areaServed": "EC",
+        "availableLanguage": "es"
+      },
+      "knowsAbout": [
+        "Producción audiovisual",
+        "IA generativa",
+        "Pauta en Meta, Google y TikTok",
+        "Desarrollo web y landings",
+        "Chatbots con IA en WhatsApp e Instagram",
+        "Automatizaciones de CRM"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Los tres departamentos de especialización",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://burnout.ec/#film-studio",
+              "name": "Producción audiovisual high-end e IA generativa",
+              "description": "Elevamos la percepción visual de tu negocio para que cobrar precios altos sea natural.",
+              "provider": {
+                "@id": "https://burnout.ec/#organizacion"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "Ecuador"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://burnout.ec/#estrategia",
+              "name": "Captura y creación de demanda comercial",
+              "description": "Atraemos a clientes calificados con capacidad y urgencia real de compra.",
+              "provider": {
+                "@id": "https://burnout.ec/#organizacion"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "Ecuador"
+              }
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "@id": "https://burnout.ec/#desarrollo",
+              "name": "Web persuasiva y cierre con IA",
+              "description": "La infraestructura técnica que convierte la atención en dinero en cuenta.",
+              "provider": {
+                "@id": "https://burnout.ec/#organizacion"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "Ecuador"
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "@type": "WebSite",
@@ -102,11 +183,30 @@
       "url": "https://burnout.ec/",
       "name": "BURNOUT",
       "inLanguage": "es-EC",
-      "publisher": { "@id": "https://burnout.ec/#organizacion" }
+      "publisher": {
+        "@id": "https://burnout.ec/#organizacion"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://burnout.ec/#portada",
+      "url": "https://burnout.ec/",
+      "name": "BURNOUT — Agencia creativa en Quito y Loja, Ecuador",
+      "isPartOf": {
+        "@id": "https://burnout.ec/#sitio"
+      },
+      "about": {
+        "@id": "https://burnout.ec/#organizacion"
+      },
+      "inLanguage": "es-EC",
+      "primaryImageOfPage": "https://burnout.ec/assets/img/og.jpg"
     }
   ]
 }
 </script>
+<!-- Sin JavaScript (bloqueado, o app.js que no llega) nadie retira el preloader
+     ni muestra lo que entra con .reveal: la portada quedaria tapada para siempre. -->
+<noscript><style>#boot{display:none}body.boot{overflow:auto}.reveal{opacity:1;transform:none}header{opacity:1;transform:none}.brand{opacity:1}</style></noscript>
 </head>
 <body class="boot">
 
@@ -127,7 +227,7 @@
   <div class="wrap nav">
     <a class="brand" href="#scene"><svg viewBox="0 0 1000 1000" aria-hidden="true"><use href="#iso"/></svg>BURNOUT</a>
     <nav class="nav-links">
-      <a href="#nodos">Servicios</a><a href="#ventas">Método</a><a href="#modalidades">Modalidades</a><a href="#trabajo">Portafolio</a>
+      <a href="#nodos">Servicios</a><a href="#ventas">Método</a><a href="#modalidades">Modalidades</a><a href="#trabajo">Portafolio</a><a class="ig" href="https://www.instagram.com/burnout.ec/" target="_blank" rel="noopener" aria-label="Instagram de BURNOUT, @burnout.ec (se abre en otra pestaña)"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/></svg></a>
       <a href="#auditoria" class="btn btn-p">Agendar diagnóstico</a>
     </nav>
   </div>
@@ -225,7 +325,7 @@
     <p style="margin-top:24px;max-width:58ch">Puedes contratar un área específica o el ecosistema completo.</p></div>
     <div class="nodos">
       <article class="nodo reveal">
-        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">01 · IN-HOUSE FILM &amp; STUDIO</span></div>
+        <div class="nodo-head"><svg viewBox="0 0 1000 1000" aria-hidden="true" focusable="false"><use href="#iso"/></svg><span class="mono">01 · IN-HOUSE FILM &amp; STUDIO</span></div>
         <h3>Producción audiovisual high-end e IA generativa</h3><p class="tesis">Elevamos la percepción visual de tu negocio para que cobrar precios altos sea natural.</p>
         <ul class="ent"><li><b>Cine real:</b> cámaras profesionales, iluminación de estudio y dirección de arte.</li>
         <li><b>IA generativa selectiva:</b> aplicada exclusivamente a campañas disruptivas y conceptos visuales avanzados.</li>
@@ -233,7 +333,7 @@
         <div class="para">Marcas que necesitan estatus y campañas de alto impacto</div></article>
 
       <article class="nodo reveal">
-        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">02 · ESTRATEGIA &amp; CRECIMIENTO</span></div>
+        <div class="nodo-head"><svg viewBox="0 0 1000 1000" aria-hidden="true" focusable="false"><use href="#iso"/></svg><span class="mono">02 · ESTRATEGIA &amp; CRECIMIENTO</span></div>
         <h3>Captura y creación de demanda comercial</h3><p class="tesis">Atraemos a clientes calificados con capacidad y urgencia real de compra.</p>
         <ul class="ent"><li><b>Auditoría y benchmark:</b> mapeo minucioso de competidores, tarifas y huecos de mercado.</li>
         <li><b>Perfil de cliente real:</b> estrategia basada en problemas y detonantes de compra específicos.</li>
@@ -241,7 +341,7 @@
         <div class="para">Negocios que necesitan demanda calificada, no alcance</div></article>
 
       <article class="nodo reveal">
-        <div class="nodo-head"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg><span class="mono">03 · DESARROLLO &amp; AUTOMATIZACIÓN</span></div>
+        <div class="nodo-head"><svg viewBox="0 0 1000 1000" aria-hidden="true" focusable="false"><use href="#iso"/></svg><span class="mono">03 · DESARROLLO &amp; AUTOMATIZACIÓN</span></div>
         <h3>Web persuasiva y cierre con IA</h3><p class="tesis">La infraestructura técnica que convierte la atención en dinero en cuenta.</p>
         <ul class="ent"><li><b>Desarrollo web y landings:</b> sitios rápidos diseñados para guiar al usuario hacia la compra directa.</li>
         <li><b>Chatbots con IA:</b> agentes en WhatsApp e Instagram que responden, filtran y agendan llamadas 24/7.</li>
@@ -271,9 +371,7 @@
       <h2 style="font-size:clamp(30px,4vw,58px)">Portafolio y<br>casos de éxito.</h2>
       <p style="max-width:34ch;font-size:14px">Cada pieza se muestra con su tesis, no solo con su render.</p></div>
     <div class="reel">
-      <article class="tile reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
-        <div class="meta"><div class="mono">DOCUMENTAL · A'I COFÁN</div><h4>DURENO 1</h4></div></article>
-      <article class="tile b v reveal"
+      <article class="tile b v dest reveal"
                data-full="assets/video/oktoberfest-loja-full.mp4"
                data-full-poster="assets/video/oktoberfest-loja-full.jpg">
         <!-- El reel ocupa el sitio del degradado y hereda su clase, asi que el zoom
@@ -291,9 +389,12 @@
         </video>
         <button type="button" class="play" data-visor aria-label="Ver el reel completo de Oktoberfest Loja"><svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></button>
         <div class="meta"><div class="mono">CAMPAÑA · EXPECTATIVA</div><h4>Oktoberfest Loja</h4></div></article>
-      <article class="tile c reveal"><div class="bgw"></div><div class="play"><svg width="12" height="14" viewBox="0 0 12 14"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
+      <article class="tile reveal"><div class="bgw"></div><div class="play" aria-hidden="true"><svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true" focusable="false"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
+        <div class="meta"><div class="mono">DOCUMENTAL · A'I COFÁN</div><h4>DURENO 1</h4></div></article>
+      <article class="tile c reveal"><div class="bgw"></div><div class="play" aria-hidden="true"><svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true" focusable="false"><path d="M0 0l12 7-12 7z" fill="#fff"/></svg></div>
         <div class="meta"><div class="mono">TERRITORIO · RECORRIDO</div><h4>La vuelta a Zamora</h4></div></article>
     </div>
+    <div class="reel-ig reveal"><a class="btn btn-s" href="https://www.instagram.com/burnout.ec/" target="_blank" rel="noopener">Ver más trabajo en Instagram · @burnout.ec<span class="sr"> (se abre en otra pestaña)</span></a></div>
   </div>
 </section>
 
@@ -390,7 +491,7 @@
 
         <div class="consent">
           <input type="checkbox" id="consent" aria-describedby="e-consent">
-          <label for="consent">Autorizo a BURNOUT AGENCY a tratar mi nombre, marca, perfil y número de WhatsApp con la única finalidad de responder a esta solicitud y contactarme para la sesión de diagnóstico. Puedo retirar este permiso cuando quiera escribiendo a hola@burnout.ec. He leído la <a href="privacidad.html">política de privacidad</a> y los <a href="terminos.html">términos y condiciones</a>.</label>
+          <label for="consent">Autorizo a BURNOUT AGENCY a tratar mi nombre, marca, perfil y número de WhatsApp con la única finalidad de responder a esta solicitud y contactarme para la sesión de diagnóstico. Puedo retirar este permiso cuando quiera escribiendo a hola@burnout.ec. He leído la <a href="privacidad.html" target="_blank" rel="noopener">política de privacidad<span class="sr"> (se abre en otra pestaña)</span></a> y los <a href="terminos.html" target="_blank" rel="noopener">términos y condiciones<span class="sr"> (se abre en otra pestaña)</span></a>.</label>
         </div>
         <p class="err" id="e-consent"></p>
 
@@ -421,16 +522,16 @@
 <footer>
   <div class="wrap">
     <div class="fgrid">
-      <div><div class="fbrand"><svg viewBox="0 0 1000 1000"><use href="#iso"/></svg>BURNOUT</div>
+      <div><div class="fbrand"><svg viewBox="0 0 1000 1000" aria-hidden="true" focusable="false"><use href="#iso"/></svg>BURNOUT</div>
         <p style="margin-top:18px;font-size:14px;max-width:32ch">Marca, tecnología y cierre en un solo ecosistema comercial.</p>
         <a href="#auditoria" class="btn btn-p" style="margin-top:26px">Agendar diagnóstico</a></div>
       <div class="fmeta">BURNOUT.EC<br>HOLA@BURNOUT.EC<br><a href="https://www.instagram.com/burnout.ec/" target="_blank" rel="noopener">INSTAGRAM · @BURNOUT.EC</a><br>QUITO · LOJA — ECUADOR</div>
     </div>
     <div class="rule"></div>
-    <div class="mono" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div class="mono" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
       <span>© 2026 BURNOUT® · AGENCIA CREATIVA</span>
       <nav class="flegal" aria-label="Legal"><a href="privacidad.html">PRIVACIDAD</a><a href="terminos.html">TÉRMINOS</a></nav>
-      <a class="devby" href="https://noctisdev.online" target="_blank" rel="noopener">DEV BY <b>NOCTIS</b></a>
+      <a class="devby" href="https://noctisdev.com/?utm_source=burnout.ec&amp;utm_medium=powered_by&amp;utm_campaign=burnout" target="_blank" rel="noopener" aria-label="Powered by Noctis"><span>Powered by</span><svg viewBox="-475 -450 3217.27 900" aria-hidden="true" focusable="false"><g fill="currentColor"><path d="M-425 450A150 150 0 0 0-275 300L-275-225A50 50 0 0 1-180.325-247.453L90.975 292.359A150 150 0 0 0 375 225L375-300A50 50 0 0 1 425-350A50 50 0 0 0 425-450A150 150 0 0 0 275-300L275 225A50 50 0 0 1 180.325 247.453L-90.975-292.359A150 150 0 0 0-375-225L-375 300A50 50 0 0 1-425 350A50 50 0 0 0-425 450Z"/><path d="M225-50A200 200 0 1 1 283.431-441.274A200 200 0 0 0 231.300-349.801A100 100 0 1 0 225-150Z"/><path d="M-225 50A200 200 0 1 1-283.431 441.274A200 200 0 0 0-231.300 349.801A100 100 0 1 0-225 150Z"/><path transform="translate(675 187.5) scale(0.535714)" d="M0 0V-700H251L390 -90H408V-700H538V0H287L148 -610H130V0ZM728.2 -350A373.33 373.33 0 1 1 1474.87 -350A373.33 373.33 0 1 1 728.2 -350ZM866.2 -350A235.33 235.33 0 1 0 1336.87 -350A235.33 235.33 0 1 0 866.2 -350ZM2249.92 -613.99A373.33 373.33 0 1 0 2249.92 -86.01L2152.34 -183.59A235.33 235.33 0 1 1 2152.34 -516.41ZM2524 0V-580H2320V-700H2860V-580H2656V0ZM3000.4 0V-700H3132.4V0ZM3593.9 14Q3512.9 14 3450.9 -15Q3388.9 -44 3353.9 -98Q3318.9 -152 3318.9 -228V-256H3448.9V-228Q3448.9 -165 3487.9 -133.5Q3526.9 -102 3593.9 -102Q3661.9 -102 3695.4 -129Q3728.9 -156 3728.9 -198Q3728.9 -227 3712.4 -245Q3695.9 -263 3664.4 -274.5Q3632.9 -286 3587.9 -296L3564.9 -301Q3492.9 -317 3441.4 -341.5Q3389.9 -366 3362.4 -406Q3334.9 -446 3334.9 -510Q3334.9 -574 3365.4 -619.5Q3395.9 -665 3451.4 -689.5Q3506.9 -714 3581.9 -714Q3656.9 -714 3715.4 -688.5Q3773.9 -663 3807.4 -612.5Q3840.9 -562 3840.9 -486V-456H3710.9V-486Q3710.9 -526 3695.4 -550.5Q3679.9 -575 3650.9 -586.5Q3621.9 -598 3581.9 -598Q3521.9 -598 3493.4 -575.5Q3464.9 -553 3464.9 -514Q3464.9 -488 3478.4 -470Q3491.9 -452 3518.9 -440Q3545.9 -428 3587.9 -419L3610.9 -414Q3685.9 -398 3741.4 -373Q3796.9 -348 3827.9 -307Q3858.9 -266 3858.9 -202Q3858.9 -138 3826.4 -89.5Q3793.9 -41 3734.4 -13.5Q3674.9 14 3593.9 14Z"/></g></svg></a>
     </div>
   </div>
 </footer>
@@ -460,8 +561,8 @@
   </div>
 </dialog>
 
-<script src="assets/js/medicion.js?v=20260908"></script>
-<script src="assets/js/scene.js?v=20260908"></script>
-<script src="assets/js/app.js?v=20260908"></script>
+<script src="assets/js/medicion.js?v=20261120"></script>
+<script src="assets/js/scene.js?v=20261120"></script>
+<script src="assets/js/app.js?v=20261120"></script>
 </body>
 </html>

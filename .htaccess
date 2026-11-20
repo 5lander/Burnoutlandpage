@@ -17,6 +17,14 @@ RewriteEngine On
 # impide servirlos. Ver el README, "tools/ en produccion".
 RewriteRule ^tools/ - [F,L]
 
+# Por la misma razon, nada que empiece por punto (.git/, .claude/, .github/,
+# .gitignore...) salvo .well-known/, que lo usan los certificados. Con .git/
+# servido se reconstruye el repositorio entero con su historial. Y docs/, que
+# es documentacion interna de Noctis, no parte del sitio.
+# Verificar tras el push: curl -sI https://burnout.ec/.git/HEAD -> 403
+RewriteRule (^|/)\.(?!well-known/) - [F,L]
+RewriteRule ^docs/ - [F,L]
+
 # Ni codigo de utilidades ni documentacion interna, esten donde esten.
 <FilesMatch "\.(py|md)$">
   <IfModule mod_authz_core.c>
@@ -40,6 +48,10 @@ RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
 RewriteRule ^ https://%1%{REQUEST_URI} [L,NE,R=301]
+
+# llms.txt y robots.txt llevan tildes: sin charset el navegador los lee como
+# Latin-1 y «producción» sale como «producciÃ³n».
+AddCharset utf-8 .txt
 
 # ── Cache de estaticos ──────────────────────────────────────────────────────
 # Los nombres de archivo no llevan huella, asi que un ano solo es seguro
@@ -68,4 +80,18 @@ RewriteRule ^ https://%1%{REQUEST_URI} [L,NE,R=301]
   AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
   AddOutputFilterByType DEFLATE application/javascript text/javascript
   AddOutputFilterByType DEFLATE image/svg+xml application/json
+</IfModule>
+
+# ── Cabeceras de seguridad ──────────────────────────────────────────────────
+# Las de riesgo bajo: no cambian nada de lo que se ve. Impiden incrustar la
+# pagina en un iframe ajeno (clickjacking sobre el formulario), que el
+# navegador adivine tipos de archivo y que la URL completa viaje como referer
+# a terceros. HSTS y CSP quedan fuera a proposito: los decide Lander (ver
+# docs/noctis/revisiones/2026-11-18-tech-lead.md, I4).
+# Verificar tras el push: curl -sI https://burnout.ec/ | grep -i -E "x-frame|nosniff|referrer|permissions"
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 </IfModule>

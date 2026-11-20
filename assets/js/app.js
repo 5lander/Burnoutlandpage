@@ -26,10 +26,17 @@ var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 })();
 
 // reveals
+// Sin IntersectionObserver (navegadores muy viejos) se muestra todo de una vez:
+// si esto lanzara un error se caeria el resto del archivo, formulario incluido.
+if(typeof IntersectionObserver !== 'function'){
+  document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in')});
+  document.querySelectorAll('#pipe .step').forEach(function(el){el.classList.add('on')});
+} else {
 var io = new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
 document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
 var pio = new IntersectionObserver(function(es){es.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('on')},i*140);pio.unobserve(e.target)}})},{threshold:.4});
 document.querySelectorAll('#pipe .step').forEach(function(el){pio.observe(el)});
+}
 
 // Compartido entre el bucle de la tarjeta y el visor: mientras el visor esta
 // abierto el bucle mudo no debe arrancar. Bloquear el desplazamiento del fondo
@@ -42,23 +49,26 @@ var visorAbierto = false;
 // salir y no llega a pedirse siquiera con movimiento reducido: ahi se queda el
 // poster. Mismo criterio que el bucle del canvas en P4, y por lo mismo: no
 // gastar bateria ni datos en algo que nadie esta mirando.
+// Recorre TODAS las tarjetas con video, no solo la primera: asi añadir otra
+// pieza al portafolio es solo HTML, como dice el README.
 (function(){
-  var v = document.querySelector('.tile video');
-  if(!v) return;
-  v.muted = true;                    // Safari mira la propiedad, no solo el atributo
+  var vids = [].slice.call(document.querySelectorAll('.tile video'));
+  if(!vids.length) return;
+  vids.forEach(function(v){ v.muted = true; });   // Safari mira la propiedad, no solo el atributo
 
-  function poster(){
+  function poster(v){
     if(v.poster || !v.dataset.poster) return;
     v.poster = v.dataset.poster;
   }
   // Sin IntersectionObserver no hay forma de saber cuando acercarse: se deja el
   // poster puesto y ya. Con movimiento reducido, tambien: poster y nada mas.
-  if(typeof IntersectionObserver !== 'function' || reduce){ poster(); return; }
+  if(typeof IntersectionObserver !== 'function' || reduce){ vids.forEach(poster); return; }
 
-  new IntersectionObserver(function(es){
+  var obs = new IntersectionObserver(function(es){
     es.forEach(function(e){
+      var v = e.target;
       if(!e.isIntersecting){ v.pause(); return; }
-      poster();
+      poster(v);
       if(visorAbierto) return;
       if(v.preload === 'none'){ v.preload = 'auto'; v.load(); }
       // play() devuelve una promesa que el navegador puede rechazar (ahorro de
@@ -66,7 +76,8 @@ var visorAbierto = false;
       var pr = v.play();
       if(pr && pr['catch']) pr['catch'](function(){});
     });
-  }, {rootMargin:'200px 0px'}).observe(v);
+  }, {rootMargin:'200px 0px'});
+  vids.forEach(function(v){ obs.observe(v); });
 })();
 
 // ── visor del reel ──────────────────────────────────────────────────────────
@@ -76,7 +87,7 @@ var visorAbierto = false;
 // la devolucion del foco al cerrar.
 //
 // No sabe nada de ninguna pieza en concreto: coge el archivo, la portada y el
-// rotulo de la tarjeta desde la que se abre, asi que vale para las tres.
+// rotulo de la tarjeta desde la que se abre, asi que vale para cualquier pieza.
 (function(){
   var visor = document.getElementById('visor'), vv = document.getElementById('visor-v');
   if(!visor || !vv || typeof visor.showModal !== 'function') return;
@@ -117,7 +128,9 @@ var visorAbierto = false;
     vv.pause(); vv.currentTime = 0;
     document.body.classList.remove('visor-abierto');
     document.body.style.paddingRight = '';
-    if(bucle && !reduce){
+    // Solo si su bucle ya se habia cargado: si no, lo arranca el observador
+    // cuando la tarjeta se acerque, con su poster y su carga diferida.
+    if(bucle && !reduce && bucle.preload !== 'none'){
       var pr = bucle.play();
       if(pr && pr['catch']) pr['catch'](function(){});
     }
