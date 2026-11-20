@@ -330,16 +330,16 @@ footer{background:var(--studio);border-top:1px solid rgba(255,255,255,.07);paddi
 .flegal a[aria-current]{color:var(--ash)}
 /* Pie «Powered by Noctis» con el lockup horizontal del Manual de Marca Noctis
    v4.0 (kit-v4-0/01-noctis/svg/noctis-lockup-horizontal.svg, trazados sin tocar).
-   Reglas del manual que fijan estas medidas:
-   - El isotipo ocupa todo el alto del lockup y su minimo es 32 px: por debajo
-     solo vale la variante micro, que no existe en lockup. Por eso 32 px, no menos.
-   - El lockup mide 9X de alto: X = 32/9 = 3,6 px y el aislamiento de 2X pide
-     al menos 7,2 px libres alrededor. El gap de 12 px y el padding lo cubren.
-   - Una sola tinta y solo Blanco Gelido sobre fondo oscuro: el logo no toma
-     el morado de BURNOUT ni cambia de color al pasar el mouse; solo el texto. */
-.devby{display:inline-flex;align-items:center;gap:12px;padding-block:8px;color:var(--graphite);transition:color .3s}
-.devby svg{display:block;height:32px;width:auto;flex:none;color:#F7F8FA}
-.devby:hover{color:var(--surge)}
+   Va discreto, como en las landings de Noctis: 20 px de alto, en una sola
+   tinta y del mismo gris que el resto del pie, para que se integre en BURNOUT
+   en vez de competir con su marca. Decision de Lander del 2026-11-20: el
+   manual pide 32 px como minimo para el isotipo; aqui manda la integracion.
+   El texto deja la monoespaciada en mayusculas de la fila y usa Poppins en
+   minusculas, igual que el pie de las landings. */
+.devby{display:inline-flex;align-items:center;gap:10px;color:var(--graphite);transition:color .3s;
+  font-family:var(--sans);font-size:13px;font-weight:400;letter-spacing:0;text-transform:none}
+.devby svg{display:block;height:20px;width:auto;flex:none}
+.devby:hover{color:var(--bone)}
 .rule{height:1px;background:rgba(255,255,255,.07);margin:40px 0 20px}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,0,.1,1),transform .8s cubic-bezier(.2,0,.1,1)}
 .reveal.in{opacity:1;transform:none}
